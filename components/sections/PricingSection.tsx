@@ -59,8 +59,38 @@ const pricingPlans = [
 
 export default function PricingSection() {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-white to-slate-50">
-      <div className="container mx-auto px-4">
+    <section className="py-16 md:py-24 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
+      {/* Curved Wave Pattern */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="wave" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+              <path d="M0 50 Q 25 25, 50 50 T 100 50" stroke="#6366f1" fill="none" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#wave)" />
+        </svg>
+      </div>
+
+      {/* Gradient Blobs */}
+      <motion.div
+        animate={{ 
+          y: [0, 30, 0],
+          scale: [1, 1.1, 1]
+        }}
+        transition={{ duration: 10, repeat: Infinity }}
+        className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-purple-300/20 to-pink-300/20 rounded-full blur-3xl pointer-events-none"
+      />
+      <motion.div
+        animate={{ 
+          y: [0, -30, 0],
+          scale: [1.1, 1, 1.1]
+        }}
+        transition={{ duration: 12, repeat: Infinity }}
+        className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl pointer-events-none"
+      />
+
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -91,7 +121,7 @@ export default function PricingSection() {
                 </Badge>
               )}
               
-              <Card className={`relative overflow-hidden border-0 shadow-xl h-full bg-gradient-to-br ${plan.gradient} ${plan.popular ? 'ring-2 ring-blue-500' : ''}`}>
+              <Card className={`relative overflow-hidden border-0 shadow-xl h-full bg-gradient-to-br ${plan.gradient} backdrop-blur-sm ${plan.popular ? 'ring-2 ring-blue-500' : ''}`}>
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
                     <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>

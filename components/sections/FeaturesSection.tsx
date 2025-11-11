@@ -41,10 +41,60 @@ const features = [
 
 export default function FeaturesSection() {
   return (
-    <section className="py-16 md:py-24 bg-white relative overflow-hidden">
-      {/* Decorative background */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-purple-100 rounded-full blur-3xl opacity-30" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-30" />
+    <section className="py-16 md:py-24 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 relative overflow-hidden">
+      {/* Animated Mesh Gradient Background */}
+      <div className="absolute inset-0 opacity-40 pointer-events-none">
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 90, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-purple-300 via-pink-200 to-blue-300 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1.2, 1, 1.2],
+            rotate: [90, 0, 90],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-blue-300 via-cyan-200 to-green-300 rounded-full blur-3xl"
+        />
+      </div>
+
+      {/* Geometric Pattern Overlay */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, #8882 1px, transparent 1px),
+              linear-gradient(to bottom, #8882 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px",
+          }}
+        />
+      </div>
+
+      {/* Floating Circles */}
+      <motion.div
+        animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-2xl pointer-events-none"
+      />
+      <motion.div
+        animate={{ y: [0, 20, 0], x: [0, -10, 0] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-br from-pink-400/20 to-orange-400/20 rounded-full blur-2xl pointer-events-none"
+      />
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
@@ -69,7 +119,7 @@ export default function FeaturesSection() {
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -8, transition: { duration: 0.2 } }}
             >
-              <Card className="group relative overflow-hidden border-0 shadow-md hover:shadow-2xl transition-all duration-300 h-full bg-white rounded-3xl">
+              <Card className="group relative overflow-hidden border-0 shadow-md hover:shadow-2xl transition-all duration-300 h-full bg-white/80 backdrop-blur-sm rounded-3xl">
                 <CardContent className="p-6 space-y-4">
                   {/* Animated Icon with Gradient */}
                   <motion.div
@@ -84,7 +134,6 @@ export default function FeaturesSection() {
                     }}
                     className={`w-20 h-20 ${feature.iconBg} rounded-2xl flex items-center justify-center shadow-sm relative overflow-hidden`}
                   >
-                    {/* Gradient overlay on hover */}
                     <div
                       className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
                     />
@@ -93,17 +142,14 @@ export default function FeaturesSection() {
                     />
                   </motion.div>
 
-                  {/* Title */}
                   <h3 className="text-xl font-bold text-slate-900">
                     {feature.title}
                   </h3>
 
-                  {/* Description */}
                   <p className="text-slate-600 text-sm leading-relaxed">
                     {feature.description}
                   </p>
 
-                  {/* Link */}
                   <button
                     className={`text-${feature.color}-600 font-semibold text-sm hover:text-${feature.color}-700 transition-colors flex items-center gap-1 group/link`}
                   >

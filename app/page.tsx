@@ -16,10 +16,10 @@ export default function Home() {
       <HeroSection />
       <WelcomeSection />
       <FeaturesSection />
-      <StatsSection />
+      {/* <StatsSection /> */}
       <CaseStudiesSection />
       <VideoGallery />
-      <PricingSection />
+      {/* <PricingSection /> */}
       <TestimonialsSection />
       <ImageGallerySection />
       <BlogSection />

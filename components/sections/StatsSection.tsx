@@ -32,8 +32,28 @@ const stats = [
 
 export default function StatsSection() {
   return (
-    <section className="py-16 bg-gradient-to-b from-slate-50 to-white">
-      <div className="container mx-auto px-4">
+    <section className="py-16 bg-white relative overflow-hidden">
+      {/* Diagonal Stripe Pattern */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              45deg,
+              #6366f1 0px,
+              #6366f1 1px,
+              transparent 1px,
+              transparent 20px
+            )`,
+          }}
+        />
+      </div>
+
+      {/* Gradient Orbs */}
+      <div className="absolute top-0 left-1/4 w-64 h-64 bg-gradient-to-br from-blue-200/30 to-purple-200/30 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-gradient-to-br from-pink-200/30 to-orange-200/30 rounded-full blur-3xl" />
+
+      <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
           {stats.map((stat, index) => (
             <motion.div
@@ -49,7 +69,6 @@ export default function StatsSection() {
                 className={`w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-xl relative`}
               >
                 <stat.icon className="w-10 h-10 text-white" />
-                
                 {/* Pulse effect */}
                 <motion.div
                   animate={{
@@ -64,7 +83,7 @@ export default function StatsSection() {
                   className={`absolute inset-0 rounded-full bg-gradient-to-br ${stat.gradient}`}
                 />
               </motion.div>
-              
+
               <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
                 {stat.value}
               </h3>

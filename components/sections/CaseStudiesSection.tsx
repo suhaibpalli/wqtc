@@ -38,8 +38,29 @@ const caseStudies = [
 
 export default function CaseStudiesSection() {
   return (
-    <section className="py-16 md:py-24 bg-white">
-      <div className="container mx-auto px-4">
+    <section className="py-16 md:py-24 bg-gradient-to-b from-white via-slate-50 to-white relative overflow-hidden">
+      {/* Dotted Grid Pattern */}
+      <div className="absolute inset-0 opacity-[0.15]">
+        <div 
+          className="absolute inset-0" 
+          style={{
+            backgroundImage: `radial-gradient(circle, #64748b 1px, transparent 1px)`,
+            backgroundSize: '30px 30px'
+          }} 
+        />
+      </div>
+
+      {/* Gradient Overlay Circles */}
+      <motion.div
+        animate={{ 
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.5, 0.3]
+        }}
+        transition={{ duration: 8, repeat: Infinity }}
+        className="absolute top-1/4 right-10 w-96 h-96 bg-gradient-to-br from-emerald-300/20 to-teal-300/20 rounded-full blur-3xl"
+      />
+
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

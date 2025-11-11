@@ -39,8 +39,43 @@ const blogPosts = [
 
 export default function BlogSection() {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-white to-slate-50">
-      <div className="container mx-auto px-4">
+    <section className="py-16 md:py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50 relative overflow-hidden">
+      {/* Hexagon Pattern */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <svg width="100%" height="100%">
+          <defs>
+            <pattern
+              id="hexagons"
+              x="0"
+              y="0"
+              width="50"
+              height="43.4"
+              patternUnits="userSpaceOnUse"
+              patternTransform="scale(2)"
+            >
+              <polygon
+                points="24.8,22 37.3,29.2 37.3,43.7 24.8,50.9 12.3,43.7 12.3,29.2"
+                fill="none"
+                stroke="#6366f1"
+                strokeWidth="0.5"
+              />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hexagons)" />
+        </svg>
+      </div>
+
+      {/* Animated Gradient Orbs */}
+      <motion.div
+        animate={{
+          x: [0, 50, 0],
+          y: [0, -30, 0],
+        }}
+        transition={{ duration: 15, repeat: Infinity }}
+        className="absolute top-1/3 left-20 w-80 h-80 bg-gradient-to-br from-blue-200/30 to-purple-200/30 rounded-full blur-3xl"
+      />
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -126,7 +161,7 @@ export default function BlogSection() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <Button 
+          <Button
             size="lg"
             className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 shadow-xl"
           >
