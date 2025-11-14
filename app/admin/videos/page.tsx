@@ -23,6 +23,7 @@ export default function AdminVideosPage() {
       const res = await fetch('/api/library', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
         body: JSON.stringify({ sort: 'DESC' })
       });
       const data = await res.json();
@@ -39,7 +40,8 @@ export default function AdminVideosPage() {
 
     try {
       const res = await fetch(`/api/admin/videos?id=${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'same-origin'
       });
 
       if (res.ok) {

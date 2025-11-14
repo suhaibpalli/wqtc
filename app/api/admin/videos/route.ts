@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { verifyAuthTokenFromRequest } from '@/lib/auth';
 
 // CREATE new video
 export async function POST(req: NextRequest) {
+  const user = verifyAuthTokenFromRequest(req);
+  if (!user || user.role !== 'admin') {
+    return NextResponse.json({ code: 401, msg: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const {
       title,
@@ -41,6 +47,11 @@ export async function POST(req: NextRequest) {
 
 // UPDATE video
 export async function PUT(req: NextRequest) {
+  const user = verifyAuthTokenFromRequest(req);
+  if (!user || user.role !== 'admin') {
+    return NextResponse.json({ code: 401, msg: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const {
       id,
@@ -78,6 +89,11 @@ export async function PUT(req: NextRequest) {
 
 // DELETE video
 export async function DELETE(req: NextRequest) {
+  const user = verifyAuthTokenFromRequest(req);
+  if (!user || user.role !== 'admin') {
+    return NextResponse.json({ code: 401, msg: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');

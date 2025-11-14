@@ -55,6 +55,7 @@ export default function NewVideoPage() {
       const res = await fetch('/api/admin/videos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
         body: JSON.stringify(formData)
       });
 
