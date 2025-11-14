@@ -52,7 +52,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AnnouncementBar />
+          {/* <AnnouncementBar /> */}
           <Navbar />
           <main className="min-h-screen">{children}</main>
           <Footer />

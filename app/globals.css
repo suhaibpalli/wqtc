@@ -1,176 +1,78 @@
 @import "tailwindcss";
 
-/* CSS Variables for theming */
-@theme {
-  --color-background: 0 0% 100%;
-  --color-foreground: 222.2 84% 4.9%;
-  --color-card: 0 0% 100%;
-  --color-card-foreground: 222.2 84% 4.9%;
-  --color-popover: 0 0% 100%;
-  --color-popover-foreground: 222.2 84% 4.9%;
-  --color-primary: 160 84% 39%;
-  --color-primary-foreground: 0 0% 100%;
-  --color-secondary: 210 40% 96.1%;
-  --color-secondary-foreground: 222.2 47.4% 11.2%;
-  --color-muted: 210 40% 96.1%;
-  --color-muted-foreground: 215.4 16.3% 46.9%;
-  --color-accent: 210 40% 96.1%;
-  --color-accent-foreground: 222.2 47.4% 11.2%;
-  --color-destructive: 0 84.2% 60.2%;
-  --color-destructive-foreground: 210 40% 98%;
-  --color-border: 214.3 31.8% 91.4%;
-  --color-input: 214.3 31.8% 91.4%;
-  --color-ring: 160 84% 39%;
-  --radius: 0.5rem;
+@layer base {
+  :root {
+    /* Background Colors - Using #faf9f7 (cream/off-white) */
+    --color-background: 35 25 18; /* Converted #faf9f7 to HSL */
+    --color-foreground: 312 23 26; /* Deep plum for text */
 
-  --font-family-inter: var(--font-inter);
-  --font-family-amiri: var(--font-amiri);
-}
+    /* Card Colors */
+    --color-card: 35 25 18;
+    --color-card-foreground: 312 23 26;
 
-.dark {
-  --color-background: 222.2 84% 4.9%;
-  --color-foreground: 210 40% 98%;
-  --color-card: 222.2 84% 4.9%;
-  --color-card-foreground: 210 40% 98%;
-  --color-popover: 222.2 84% 4.9%;
-  --color-popover-foreground: 210 40% 98%;
-  --color-primary: 160 84% 39%;
-  --color-primary-foreground: 0 0% 100%;
-  --color-secondary: 217.2 32.6% 17.5%;
-  --color-secondary-foreground: 210 40% 98%;
-  --color-muted: 217.2 32.6% 17.5%;
-  --color-muted-foreground: 215 20.2% 65.1%;
-  --color-accent: 217.2 32.6% 17.5%;
-  --color-accent-foreground: 210 40% 98%;
-  --color-destructive: 0 62.8% 30.6%;
-  --color-destructive-foreground: 210 40% 98%;
-  --color-border: 217.2 32.6% 17.5%;
-  --color-input: 217.2 32.6% 17.5%;
-  --color-ring: 160 84% 39%;
-}
+    /* Popover Colors */
+    --color-popover: 35 25 18;
+    --color-popover-foreground: 312 23 26;
 
-/* Base styles */
-* {
-  border-color: hsl(var(--color-border));
-}
+    /* Primary Color - Using #453142 (deep plum) */
+    --color-primary: 312 23 26; /* #453142 in HSL */
+    --color-primary-foreground: 35 25 18;
 
-body {
-  background-color: hsl(var(--color-background));
-  color: hsl(var(--color-foreground));
-  font-feature-settings: "rlig" 1, "calt" 1;
-}
+    /* Secondary Colors */
+    --color-secondary: 312 15 35;
+    --color-secondary-foreground: 35 25 18;
 
-/* Custom animations */
-@keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -10%); }
-  20% { transform: translate(-15%, 5%); }
-  30% { transform: translate(7%, -25%); }
-  40% { transform: translate(-5%, 25%); }
-  50% { transform: translate(-15%, 10%); }
-  60% { transform: translate(15%, 0%); }
-  70% { transform: translate(0%, 15%); }
-  80% { transform: translate(3%, 35%); }
-  90% { transform: translate(-10%, 10%); }
-}
+    /* Muted Colors */
+    --color-muted: 30 20 92;
+    --color-muted-foreground: 312 12 45;
 
-@keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+    /* Accent Colors */
+    --color-accent: 312 18 32;
+    --color-accent-foreground: 35 25 18;
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
+    /* Destructive (Error) Colors */
+    --color-destructive: 0 84.2 60.2;
+    --color-destructive-foreground: 35 25 18;
 
-@keyframes pulse-glow {
-  0%, 100% { 
-    opacity: 1; 
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); 
+    /* Border & Input */
+    --color-border: 312 10 85;
+    --color-input: 312 10 85;
+    --color-ring: 312 23 26;
+
+    --radius: 0.5rem;
+
+    --font-family-inter: var(--font-inter);
+    --font-family-amiri: var(--font-amiri);
   }
-  50% { 
-    opacity: 0.8; 
-    box-shadow: 0 0 40px rgba(16, 185, 129, 0.6); 
+
+  .dark {
+    /* Dark mode: Inverted colors */
+    --color-background: 312 23 16;
+    --color-foreground: 35 25 98;
+
+    --color-card: 312 23 16;
+    --color-card-foreground: 35 25 98;
+
+    --color-popover: 312 23 16;
+    --color-popover-foreground: 35 25 98;
+
+    --color-primary: 312 23 40;
+    --color-primary-foreground: 35 25 98;
+
+    --color-secondary: 312 20 25;
+    --color-secondary-foreground: 35 25 98;
+
+    --color-muted: 312 20 25;
+    --color-muted-foreground: 312 15 70;
+
+    --color-accent: 312 20 25;
+    --color-accent-foreground: 35 25 98;
+
+    --color-destructive: 0 62.8 30.6;
+    --color-destructive-foreground: 35 25 98;
+
+    --color-border: 312 20 25;
+    --color-input: 312 20 25;
+    --color-ring: 312 23 40;
   }
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient 15s ease infinite;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-/* Embla Carousel Styles */
-.embla {
-  overflow: hidden;
-}
-
-.embla__container {
-  display: flex;
-}
-
-.embla__slide {
-  flex: 0 0 100%;
-  min-width: 0;
-}
-
-/* Perspective for 3D effects */
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-/* Gradient animation */
-@keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
-}
-
-/* Enhanced animations */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite;
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    transparent 100%
-  );
-  background-size: 1000px 100%;
-}
-
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Better focus states */
-*:focus-visible {
-  outline: 2px solid hsl(var(--color-ring));
-  outline-offset: 2px;
 }

@@ -2,90 +2,118 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play, Clock, User, TrendingUp } from "lucide-react";
+import { Play, Clock, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
 
+// Updated categories/classes
 const categories = [
   {
     id: 1,
-    title: "TECHNOLOGY",
-    subtitle: "Explore Latest",
-    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=400&fit=crop",
-    gradient: "from-purple-600/80 via-pink-600/80 to-red-600/80",
+    title: "Daily English & Urdu Classes",
+    subtitle: "For Men",
+    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop",
+    gradient: "from-[#453142]/80 via-[#6e4d66]/80 to-[#faf9f7]/80",
   },
   {
     id: 2,
-    title: "Classifying Best Electronic Hacks",
-    subtitle: "Learn & Grow",
+    title: "Daily English & Urdu Classes",
+    subtitle: "For Women",
     image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop",
-    gradient: "from-pink-500/80 via-purple-500/80 to-indigo-600/80",
+    gradient: "from-[#6e4d66]/80 via-[#453142]/80 to-[#faf9f7]/80",
   },
   {
     id: 3,
-    title: "Industry Labor Superb AI",
-    subtitle: "Stay Updated",
+    title: "Daily Tamil Classes",
+    subtitle: "For Men",
     image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop",
-    gradient: "from-blue-600/80 via-cyan-600/80 to-teal-600/80",
+    gradient: "from-[#453142]/80 via-[#faf9f7]/80 to-[#6e4d66]/80",
   },
   {
     id: 4,
-    title: "Education Super AI",
-    subtitle: "Transform Life",
+    title: "Daily Tamil Classes",
+    subtitle: "For Women",
+    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=400&fit=crop",
+    gradient: "from-[#faf9f7]/80 via-[#6e4d66]/80 to-[#453142]/80",
+  },
+  {
+    id: 5,
+    title: "Weekend Classes in English & Urdu",
+    subtitle: "For Men",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop",
+    gradient: "from-[#453142]/80 via-[#faf9f7]/80 to-[#6e4d66]/80",
+  },
+  {
+    id: 6,
+    title: "Weekend Classes in English & Urdu",
+    subtitle: "For Women",
     image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&h=400&fit=crop",
-    gradient: "from-cyan-500/80 via-teal-500/80 to-green-600/80",
+    gradient: "from-[#6e4d66]/80 via-[#453142]/80 to-[#faf9f7]/80",
   },
 ];
 
+// Always "Free", no stars, trending or complete
 const courses = [
   {
     id: 1,
-    title: "Surah 107, Al-Ma'un, 1-7",
+    title: "Free",
+    classType: "Daily",
+    category: "English & Urdu · Men",
     instructor: "Ustad Imran Sait",
-    category: "Beginner",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop",
-    price: "Free",
-    rating: 5,
+    image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=400&h=300&fit=crop",
     students: "2.5K",
-    lessons: "Complete",
-    trending: true,
+    time: "45 min",
   },
   {
     id: 2,
-    title: "Surah 106, Quraysh, 1-4",
+    title: "Free",
+    classType: "Daily",
+    category: "English & Urdu · Women",
     instructor: "Ustad Imran Sait",
-    category: "Advanced",
-    image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=400&h=300&fit=crop",
-    price: "Free",
-    rating: 5,
+    image: "https://images.unsplash.com/photo-1513128034602-7814ccaddd4e?w=400&h=300&fit=crop",
     students: "2.3K",
-    lessons: "Complete",
-    trending: false,
+    time: "45 min",
   },
   {
     id: 3,
-    title: "Surah 105, Al-Fil, 1-5",
+    title: "Free",
+    classType: "Daily",
+    category: "Tamil · Men",
     instructor: "Ustad Imran Sait",
-    category: "Beginner",
-    image: "https://images.unsplash.com/photo-1513128034602-7814ccaddd4e?w=400&h=300&fit=crop",
-    price: "Free",
-    rating: 5,
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop",
     students: "2.8K",
-    lessons: "Complete",
-    trending: true,
+    time: "60 min",
   },
   {
     id: 4,
-    title: "Surah 114, An-Nas, 1-6",
+    title: "Free",
+    classType: "Daily",
+    category: "Tamil · Women",
     instructor: "Ustad Imran Sait",
-    category: "Expert",
-    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop",
-    price: "Free",
-    rating: 5,
+    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&h=300&fit=crop",
     students: "3.1K",
-    lessons: "Complete",
-    trending: false,
+    time: "60 min",
+  },
+  {
+    id: 5,
+    title: "Free",
+    classType: "Weekend",
+    category: "English & Urdu · Men",
+    instructor: "Ustad Imran Sait",
+    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=300&fit=crop",
+    students: "1.4K",
+    time: "2 hrs",
+  },
+  {
+    id: 6,
+    title: "Free",
+    classType: "Weekend",
+    category: "English & Urdu · Women",
+    instructor: "Ustad Imran Sait",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=300&fit=crop",
+    students: "1.2K",
+    time: "2 hrs",
   },
 ];
 
@@ -93,7 +121,7 @@ export default function VideoGallery() {
   const [hoveredCourse, setHoveredCourse] = useState<number | null>(null);
 
   return (
-    <section id="videos" className="py-16 md:py-24 bg-white relative overflow-hidden">
+    <section id="videos" className="py-16 md:py-24 bg-[#faf9f7] relative overflow-hidden">
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div
@@ -109,20 +137,17 @@ export default function VideoGallery() {
             transition={{ type: "spring", stiffness: 200, damping: 15 }}
             className="inline-block mb-4"
           >
-            <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 text-sm font-semibold">
-              Latest Videos
+            <Badge className="bg-[#453142] text-[#faf9f7] px-6 py-2 text-sm font-semibold shadow-md">
+              Latest Classes
             </Badge>
           </motion.div>
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            Differentiating through case studies<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600">
-              Machine learning.
-            </span>
+          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-[#453142]">
+            Live Quran Classes – Organized by Language & Group
           </h2>
         </motion.div>
 
-        {/* Categories Grid with Real Images */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+        {/* Categories Grid – Language/Gender Groups */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {categories.map((category, index) => (
             <motion.div
               key={category.id}
@@ -132,8 +157,8 @@ export default function VideoGallery() {
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -8, transition: { duration: 0.3 } }}
             >
-              <Card className="group relative overflow-hidden cursor-pointer border-0 shadow-xl h-full">
-                <div className="relative h-64">
+              <Card className="group relative overflow-hidden cursor-pointer border-0 shadow-xl h-full rounded-3xl">
+                <div className="relative h-56">
                   {/* Background Image */}
                   <Image
                     src={category.image}
@@ -141,54 +166,35 @@ export default function VideoGallery() {
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  
                   {/* Gradient Overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} mix-blend-multiply`} />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
-                  
+                  <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient}`} />
+                  <div className="absolute inset-0 bg-[#453142]/20 group-hover:bg-[#faf9f7]/10 transition-colors" />
                   {/* Content */}
-                  <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                    <div className="relative z-10 text-white">
-                      <h3 className="text-2xl font-bold mb-2 transform group-hover:translate-x-2 transition-transform">
+                  <div className="absolute inset-0 flex flex-col justify-end items-start p-6">
+                    <div className="relative z-10">
+                      <h3 className="text-xl font-extrabold mb-1 text-[#faf9f7] group-hover:text-[#453142] transition-colors">
                         {category.title}
                       </h3>
-                      <p className="text-sm opacity-90 flex items-center gap-2">
-                        {category.subtitle}
-                        <motion.span
-                          initial={{ x: 0 }}
-                          whileHover={{ x: 5 }}
-                          transition={{ type: "spring", stiffness: 400 }}
-                        >
-                          →
-                        </motion.span>
-                      </p>
+                      <p className="text-sm opacity-90 text-[#faf9f7] group-hover:text-[#faf9f7]/80">{category.subtitle}</p>
                     </div>
                   </div>
-
-                  {/* Shine effect */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: '100%' }}
-                    transition={{ duration: 0.6 }}
-                  />
                 </div>
               </Card>
             </motion.div>
           ))}
         </div>
 
-        {/* Courses Section with Real Images */}
+        {/* Courses Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-8">Our online courses</h2>
+          <h2 className="text-3xl md:text-5xl font-bold mb-8 text-[#453142]">All Class Schedules</h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course, index) => (
             <motion.div
               key={course.id}
@@ -199,82 +205,51 @@ export default function VideoGallery() {
               onMouseEnter={() => setHoveredCourse(course.id)}
               onMouseLeave={() => setHoveredCourse(null)}
             >
-              <Card className="group hover:shadow-2xl transition-all duration-300 overflow-hidden border-0 shadow-lg">
-                <div className="relative h-48 overflow-hidden">
+              <Card className="group hover:shadow-2xl transition-all duration-300 overflow-hidden border-0 shadow-lg rounded-3xl">
+                <div className="relative h-44 overflow-hidden">
                   {/* Course Image */}
                   <Image
                     src={course.image}
-                    alt={course.title}
+                    alt={course.category}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-
-                  {/* Badges */}
-                  {course.trending && (
-                    <Badge className="absolute top-3 right-3 bg-gradient-to-r from-orange-500 to-red-500 text-white z-10 flex items-center gap-1">
-                      <TrendingUp className="h-3 w-3" />
-                      Trending
-                    </Badge>
-                  )}
-                  
-                  <Badge className="absolute top-3 left-3 bg-blue-500 z-10">{course.category}</Badge>
-                  
                   {/* Play Button Overlay */}
-                  <motion.div 
-                    className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-emerald-600/90 to-teal-600/90 backdrop-blur-sm"
+                  <motion.div
+                    className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#453142]/70 to-[#faf9f7]/70 backdrop-blur-sm"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: hoveredCourse === course.id ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
                     <motion.div
-                      className="w-20 h-20 rounded-full bg-white/95 flex items-center justify-center shadow-2xl cursor-pointer"
+                      className="w-16 h-16 rounded-full bg-white/95 flex items-center justify-center shadow-2xl cursor-pointer"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <Play className="h-10 w-10 text-emerald-600 fill-emerald-600 ml-1" />
+                      <Play className="h-8 w-8 text-[#453142] ml-1" />
                     </motion.div>
                   </motion.div>
                 </div>
-
                 <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <motion.span 
-                      className="text-2xl font-bold text-emerald-600"
-                      animate={{ scale: hoveredCourse === course.id ? 1.1 : 1 }}
-                    >
-                      {course.price}
-                    </motion.span>
-                    <div className="flex items-center gap-1">
-                      {[...Array(course.rating)].map((_, i) => (
-                        <motion.svg 
-                          key={i} 
-                          className="w-4 h-4 fill-yellow-400"
-                          viewBox="0 0 20 20"
-                          initial={{ scale: 0, rotate: -180 }}
-                          whileInView={{ scale: 1, rotate: 0 }}
-                          transition={{ delay: i * 0.05 }}
-                        >
-                          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                        </motion.svg>
-                      ))}
-                    </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-lg font-bold text-[#453142]">{course.title}</span>
+                    <Badge className="bg-[#453142] text-[#faf9f7] rounded-full px-3 py-1 capitalize text-xs">
+                      {course.classType}
+                    </Badge>
                   </div>
-                  
-                  <h3 className="font-bold text-lg mb-3 line-clamp-2 group-hover:text-emerald-600 transition-colors min-h-[56px]">
-                    {course.title}
+                  <h3 className="font-bold text-base mb-2 text-[#453142] leading-snug">
+                    {course.category}
                   </h3>
-                  
-                  <div className="flex items-center gap-2 text-sm text-slate-600 mb-3">
-                    <User className="h-4 w-4 text-emerald-600" />
+                  <div className="flex items-center gap-2 text-sm text-[#453142]/80 mb-2">
+                    <User className="h-4 w-4 text-[#453142]" />
                     <span>{course.instructor}</span>
                   </div>
-                  
-                  <div className="flex items-center justify-between text-sm text-slate-600 pt-3 border-t">
+                  <div className="flex items-center justify-between text-sm text-[#453142]/70 pt-2 border-t border-[#453142]/10">
                     <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4 text-emerald-600" />
-                      <span>{course.lessons}</span>
+                      <Clock className="h-4 w-4 text-[#453142]" />
+                      <span>{course.time}</span>
                     </div>
-                    <span className="font-semibold text-emerald-600">{course.students} Students</span>
+                    <span className="font-semibold">{course.students} Students</span>
                   </div>
                 </CardContent>
               </Card>

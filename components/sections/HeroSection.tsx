@@ -6,44 +6,36 @@ import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useCallback, useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Play, BookOpen, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, BookOpen } from "lucide-react";
+import Image from "next/image";
 
 const heroSlides = [
   {
     id: 1,
-    badge: "Welcome to WQTC",
     title: "Learn the Qur'an translation",
     highlight: "Word for Word",
     description: "Understanding Quran becomes natural with our innovative teaching methodology",
-    verse: "كِتٰبٌ اَنْزَلْنٰهُ اِلَيْكَ مُبٰرَكٌ",
-    verseTranslation: "A Book full of blessings - Surah Saad [38:29]",
     primaryCTA: "Watch Classes",
     secondaryCTA: "Learn More",
-    gradient: "from-slate-900 via-emerald-900 to-teal-900",
+    backgroundImage: "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=2000",
   },
   {
     id: 2,
-    badge: "Free Online Classes",
     title: "Master Quran Translation",
     highlight: "Step by Step",
     description: "Join thousands of students learning Quran translation in English, Urdu, and Tamil",
-    verse: "لِّيَدَّبَّرُوْٓا اٰيٰتِهٖ وَلِيَتَذَكَّرَ",
-    verseTranslation: "That they may ponder over its Verses - Surah Saad [38:29]",
     primaryCTA: "Join for Free",
     secondaryCTA: "View Library",
-    gradient: "from-indigo-900 via-purple-900 to-pink-900",
+    backgroundImage: "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=2000",
   },
   {
     id: 3,
-    badge: "By Ustaad Imran Sait",
     title: "Transform Your Life",
     highlight: "Through Quran",
     description: "Experience life-changing impact through understanding Allah's message",
-    verse: "اُولُوا الْاَلْبَابِ",
-    verseTranslation: "Men of Understanding - Surah Saad [38:29]",
     primaryCTA: "Start Learning",
     secondaryCTA: "Contact Us",
-    gradient: "from-blue-900 via-teal-900 to-cyan-900",
+    backgroundImage: "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=2000",
   },
 ];
 
@@ -87,25 +79,30 @@ export default function HeroSection() {
         <div className="embla__container flex">
           {heroSlides.map((slide, index) => (
             <div key={slide.id} className="embla__slide flex-[0_0_100%] min-w-0">
-              <div className={`relative overflow-hidden bg-gradient-to-br ${slide.gradient} text-white min-h-[calc(100vh-4rem)]`}>
-                {/* Animated geometric patterns */}
-                <div className="absolute inset-0 opacity-10">
-                  <div className="absolute inset-0" style={{
-                    backgroundImage: `
-                      linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
-                      linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
-                      linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.1) 75%),
-                      linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.1) 75%)
-                    `,
-                    backgroundSize: '60px 60px',
-                    backgroundPosition: '0 0, 0 30px, 30px -30px, -30px 0px'
-                  }} />
+              <div className="relative overflow-hidden min-h-[calc(100vh-4rem)]">
+                {/* Background Image */}
+                <div className="absolute inset-0">
+                  <Image
+                    src={slide.backgroundImage}
+                    alt="Quran background"
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                  
+                  {/* Subtle vignette effect */}
+                  <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/30" />
                 </div>
 
-                {/* Gradient orbs with glassmorphism */}
-                <div className="absolute top-20 -right-32 w-96 h-96 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full mix-blend-overlay filter blur-3xl opacity-30 animate-float" />
-                <div className="absolute -bottom-20 -left-32 w-96 h-96 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full mix-blend-overlay filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '2s' }} />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-purple-400 to-pink-500 rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-pulse" style={{ animationDuration: '8s' }} />
+                {/* WHITE OVERLAY LAYER - Added between image and content */}
+                <div className="absolute inset-0 bg-white/70 backdrop-blur-sm" />
+
+                {/* Subtle gradient orbs - reduced opacity */}
+                <div className="absolute top-20 -right-32 w-96 h-96 bg-gradient-to-br from-[#453142]/10 to-[#453142]/5 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" />
+                <div
+                  className="absolute -bottom-20 -left-32 w-96 h-96 bg-gradient-to-br from-[#453142]/10 to-[#453142]/5 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"
+                  style={{ animationDelay: "2s" }}
+                />
 
                 <div className="container relative mx-auto px-4 py-20 md:py-32 lg:py-40">
                   <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -120,42 +117,31 @@ export default function HeroSection() {
                           transition={{ duration: 0.6, ease: "easeOut" }}
                           className="space-y-8 z-10"
                         >
-                          {/* Badge with shimmer effect */}
-                          <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 shadow-lg"
-                          >
-                            <Sparkles className="h-4 w-4 text-emerald-300" />
-                            <span className="text-sm font-semibold text-emerald-200">{slide.badge}</span>
-                          </motion.div>
-
-                          {/* Title with stagger animation */}
-                          <motion.h1 
-                            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-tight"
+                          {/* Title - removed text shadow since white overlay provides readability */}
+                          <motion.h1
+                            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-tight text-[#453142]"
                             initial={{ opacity: 0, x: -50 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.3, duration: 0.6 }}
                           >
                             {slide.title}{" "}
                             <span className="relative inline-block">
-                              <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 animate-gradient">
+                              <span className="relative z-10 text-[#453142] font-extrabold">
                                 {slide.highlight}
                               </span>
-                              <motion.span 
-                                className="absolute bottom-2 left-0 w-full h-4 bg-gradient-to-r from-emerald-500/40 to-teal-500/40 -rotate-1 blur-sm"
-                                animate={{ 
+                              <motion.span
+                                className="absolute bottom-2 left-0 w-full h-4 bg-[#faf9f7] -rotate-1"
+                                animate={{
                                   scaleX: [0, 1],
-                                  opacity: [0, 1]
+                                  opacity: [0, 1],
                                 }}
                                 transition={{ delay: 0.8, duration: 0.6 }}
                               />
                             </span>
                           </motion.h1>
 
-                          <motion.p 
-                            className="text-lg md:text-xl text-slate-200 max-w-2xl leading-relaxed"
+                          <motion.p
+                            className="text-lg md:text-xl text-[#453142] max-w-2xl leading-relaxed font-medium"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.5 }}
@@ -163,31 +149,16 @@ export default function HeroSection() {
                             {slide.description}
                           </motion.p>
 
-                          {/* Arabic verse with glow effect */}
+                          {/* CTA Buttons */}
                           <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.6 }}
-                            className="p-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl"
-                          >
-                            <p className="text-2xl md:text-3xl font-amiri text-right leading-relaxed mb-3 text-emerald-100">
-                              {slide.verse}
-                            </p>
-                            <p className="text-sm text-slate-300 italic text-center">
-                              {slide.verseTranslation}
-                            </p>
-                          </motion.div>
-
-                          {/* CTA Buttons with hover effects */}
-                          <motion.div 
                             className="flex flex-col sm:flex-row gap-4"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.8 }}
                           >
-                            <Button 
-                              size="lg" 
-                              className="group relative bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-2xl shadow-pink-500/50 px-8 overflow-hidden"
+                            <Button
+                              size="lg"
+                              className="group relative bg-[#453142] hover:bg-[#5a3f54] text-[#faf9f7] shadow-2xl shadow-[#453142]/50 px-8 overflow-hidden font-semibold"
                               asChild
                             >
                               <Link href="#videos">
@@ -195,12 +166,13 @@ export default function HeroSection() {
                                   <Play className="h-5 w-5 group-hover:scale-110 transition-transform" />
                                   {slide.primaryCTA}
                                 </span>
-                                <span className="absolute inset-0 bg-gradient-to-r from-pink-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity blur-xl" />
+                                <span className="absolute inset-0 bg-gradient-to-r from-[#5a3f54] to-[#453142] opacity-0 group-hover:opacity-100 transition-opacity blur-xl" />
                               </Link>
                             </Button>
-                            <Button 
-                              size="lg" 
-                              className="group border-2 border-white/30 hover:bg-white/10 text-white px-8 backdrop-blur-sm bg-white/5"
+                            <Button
+                              size="lg"
+                              variant="outline"
+                              className="group border-2 border-[#453142] hover:bg-[#453142] text-[#453142] hover:text-[#faf9f7] px-8 bg-white/80"
                               asChild
                             >
                               <Link href="/about">
@@ -213,7 +185,7 @@ export default function HeroSection() {
                       )}
                     </AnimatePresence>
 
-                    {/* Right - 3D Visual Effect */}
+                    {/* Right - 3D Visual Effect with Quran Image */}
                     <AnimatePresence mode="wait">
                       {selectedIndex === index && (
                         <motion.div
@@ -226,60 +198,78 @@ export default function HeroSection() {
                         >
                           <div className="relative w-full aspect-square max-w-lg mx-auto transform-gpu">
                             {/* Glassmorphic circles with 3D effect */}
-                            <motion.div 
-                              className="absolute inset-0 bg-gradient-to-br from-cyan-400/20 to-blue-500/20 rounded-full backdrop-blur-sm border border-white/10 shadow-2xl"
-                              animate={{ 
+                            <motion.div
+                              className="absolute inset-0 bg-gradient-to-br from-[#453142]/20 to-[#453142]/10 rounded-full backdrop-blur-sm border border-[#453142]/30 shadow-2xl"
+                              animate={{
                                 rotate: 360,
-                                scale: [1, 1.05, 1]
+                                scale: [1, 1.05, 1],
                               }}
-                              transition={{ 
+                              transition={{
                                 rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
                               }}
                             />
-                            <motion.div 
-                              className="absolute inset-8 bg-gradient-to-br from-purple-400/30 to-pink-500/30 rounded-full backdrop-blur-sm border border-white/10"
-                              animate={{ 
+                            <motion.div
+                              className="absolute inset-8 bg-gradient-to-br from-[#453142]/30 to-[#453142]/20 rounded-full backdrop-blur-sm border border-[#453142]/30"
+                              animate={{
                                 rotate: -360,
-                                scale: [1, 1.08, 1]
+                                scale: [1, 1.08, 1],
                               }}
-                              transition={{ 
+                              transition={{
                                 rotate: { duration: 15, repeat: Infinity, ease: "linear" },
-                                scale: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
+                                scale: {
+                                  duration: 3,
+                                  repeat: Infinity,
+                                  ease: "easeInOut",
+                                  delay: 0.5,
+                                },
                               }}
                             />
-                            <motion.div 
-                              className="absolute inset-16 bg-gradient-to-br from-emerald-400/40 to-teal-500/40 rounded-full backdrop-blur-sm flex items-center justify-center border border-white/20 shadow-inner"
-                              animate={{ 
-                                scale: [1, 1.1, 1]
+                            <motion.div
+                              className="absolute inset-16 bg-gradient-to-br from-[#453142]/40 to-[#453142]/30 rounded-full backdrop-blur-sm flex items-center justify-center border border-[#453142]/40 shadow-inner overflow-hidden"
+                              animate={{
+                                scale: [1, 1.1, 1],
                               }}
-                              transition={{ 
-                                scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 1 }
+                              transition={{
+                                scale: {
+                                  duration: 2.5,
+                                  repeat: Infinity,
+                                  ease: "easeInOut",
+                                  delay: 1,
+                                },
                               }}
                             >
-                              <BookOpen className="h-24 w-24 text-white/80" />
+                              {/* Quran Image in Center Circle */}
+                              <div className="relative w-full h-full rounded-full overflow-hidden">
+                                <Image
+                                  src="https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=800"
+                                  alt="Holy Quran"
+                                  fill
+                                  className="object-cover opacity-90"
+                                />
+                              </div>
                             </motion.div>
-                            
+
                             {/* Orbiting particles */}
                             <div className="absolute inset-0">
                               {floatingDots.map((dot, i) => (
                                 <motion.div
                                   key={i}
-                                  className={`absolute ${dot.size} bg-gradient-to-br from-cyan-300 to-blue-400 rounded-full shadow-lg`}
+                                  className={`absolute ${dot.size} bg-gradient-to-br from-[#453142] to-[#5a3f54] rounded-full shadow-lg`}
                                   style={{
                                     top: dot.top,
                                     left: dot.left,
                                   }}
                                   animate={{
                                     y: [0, -20, 0],
-                                    opacity: [0.5, 1, 0.5],
+                                    opacity: [0.4, 0.8, 0.4],
                                     scale: [1, 1.2, 1],
                                   }}
                                   transition={{
                                     duration: 3,
                                     repeat: Infinity,
                                     ease: "easeInOut",
-                                    delay: parseFloat(dot.delay)
+                                    delay: parseFloat(dot.delay),
                                   }}
                                 />
                               ))}
@@ -301,10 +291,10 @@ export default function HeroSection() {
         {/* Navigation Arrows */}
         <button
           onClick={scrollPrev}
-          className="group p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg"
+          className="group p-3 rounded-full bg-[#453142]/80 backdrop-blur-md border border-[#faf9f7]/20 hover:bg-[#453142] transition-all duration-300 shadow-lg"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
+          <ChevronLeft className="h-6 w-6 text-[#faf9f7] group-hover:scale-110 transition-transform" />
         </button>
 
         {/* Dots Indicator */}
@@ -314,9 +304,9 @@ export default function HeroSection() {
               key={index}
               onClick={() => emblaApi?.scrollTo(index)}
               className={`h-2 rounded-full transition-all duration-300 ${
-                index === selectedIndex 
-                  ? 'w-8 bg-white' 
-                  : 'w-2 bg-white/40 hover:bg-white/60'
+                index === selectedIndex
+                  ? "w-8 bg-[#453142]"
+                  : "w-2 bg-[#453142]/40 hover:bg-[#453142]/60"
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -325,10 +315,10 @@ export default function HeroSection() {
 
         <button
           onClick={scrollNext}
-          className="group p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg"
+          className="group p-3 rounded-full bg-[#453142]/80 backdrop-blur-md border border-[#faf9f7]/20 hover:bg-[#453142] transition-all duration-300 shadow-lg"
           aria-label="Next slide"
         >
-          <ChevronRight className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
+          <ChevronRight className="h-6 w-6 text-[#faf9f7] group-hover:scale-110 transition-transform" />
         </button>
       </div>
     </section>
