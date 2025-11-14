@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Surah {
+  id      Int     @id @default(autoincrement())
+  name    String
+  verses  Int
+  videos  Video[]
+
+  @@map("tbl_surah")
+}
+
+model Video {
+  id               Int      @id @default(autoincrement())
+  title            String
+  surah_no         Int
+  surah_name       String?
+  starting_ayah    Int
+  ending_ayah      Int?
+  time_start_ayah  String?
+  youTube_link     String
+  video_identifier String?
+  created_date     DateTime @default(now())
+  created_by       String   @default("WQTC_Team")
+  keywords         String?
+
+  surah Surah @relation(fields: [surah_no], references: [id])
+
+  @@index([surah_no])
+  @@index([starting_ayah])
+  @@index([created_date])
+  @@map("tbl_library_video")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  firstname  String?
+  lastname   String?
+  email      String   @unique
+  role       String   @default("admin")
+  active     String   @default("YES")
+  created_at DateTime @default(now())
+
+  @@map("tbl_user")
+}
