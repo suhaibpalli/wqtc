@@ -44,7 +44,7 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [scale, setScale] = useState(1.5);
+  const [scale, setScale] = useState(3); // double the scale from 1.5 to 3
   const [pdfjs, setPdfjs] = useState<any>(null);
 
   // Dynamically import pdfjs-dist on client
@@ -66,7 +66,7 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
       loadPDF();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filename, pdfjs]);
+  }, [filename, pdfjs, scale]); // include scale so changing zoom reloads pages
 
   const loadPDF = async () => {
     if (!pdfjs) return;
@@ -121,6 +121,21 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
     return canvas;
   };
 
+  // Group pages into spreads (arrays of [left, right])
+  const getSpreads = (pagesArr: HTMLCanvasElement[]) => {
+    const spreads: Array<[HTMLCanvasElement | null, HTMLCanvasElement | null]> = [];
+    // For cover mode: first page is alone (right side)
+    if (pagesArr.length === 0) return spreads;
+    spreads.push([null, pagesArr[0]]); // Cover: left empty, right is first
+    for (let i = 1; i < pagesArr.length; i += 2) {
+      spreads.push([
+        pagesArr[i] || null,
+        pagesArr[i + 1] || null,
+      ]);
+    }
+    return spreads;
+  };
+
   const nextPage = () => {
     if (flipbookRef.current) {
       flipbookRef.current.pageFlip().flipNext();
@@ -140,18 +155,16 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
   // When zoom changes, re-render PDF
   const zoomIn = () => {
     setScale((prev) => {
-      const newScale = Math.min(prev + 0.2, 3);
+      const newScale = Math.min(prev + 0.4, 6); // slightly larger increments
       return newScale;
     });
-    setTimeout(() => loadPDF(), 100);
   };
 
   const zoomOut = () => {
     setScale((prev) => {
-      const newScale = Math.max(prev - 0.2, 0.5);
+      const newScale = Math.max(prev - 0.4, 1);
       return newScale;
     });
-    setTimeout(() => loadPDF(), 100);
   };
 
   if (!pdfjs || loading) {
@@ -167,6 +180,11 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
     );
   }
 
+  // DOUBLE the page width and height
+  // The original was width={550}, height={733} (single), now make width={1100}, height={1466} (for spread)
+  // If you want to let scale also affect the size, adjust here as needed.
+
+  // For shadow effect and clarity max width/height also doubled
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#453142]/5">
       {/* Controls */}
@@ -182,12 +200,12 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
         </Button>
 
         <span className="text-sm font-medium text-[#453142] min-w-[80px] text-center">
-          {currentPage + 1} / {totalPages}
+          {currentPage + 1} / {getSpreads(pages).length}
         </span>
 
         <Button
           onClick={nextPage}
-          disabled={currentPage >= totalPages - 1}
+          disabled={currentPage >= getSpreads(pages).length - 1}
           variant="ghost"
           size="sm"
           className="rounded-full"
@@ -220,13 +238,13 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
       <div className="flipbook-container">
         <HTMLFlipBook
           ref={flipbookRef}
-          width={550}
-          height={733}
+          width={1100}
+          height={1466}
           size="stretch"
-          minWidth={315}
-          maxWidth={1000}
-          minHeight={400}
-          maxHeight={1533}
+          minWidth={630}
+          maxWidth={2000}
+          minHeight={800}
+          maxHeight={3066}
           maxShadowOpacity={0.5}
           showCover={true}
           mobileScrollSupport={true}
@@ -236,7 +254,7 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
           startPage={0}
           drawShadow={true}
           flippingTime={1000}
-          usePortrait={true}
+          usePortrait={false} // changed to horizontal spreads
           startZIndex={0}
           autoSize={true}
           clickEventForward={true}
@@ -245,9 +263,40 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
           showPageCorners={true}
           disableFlipByClick={false}
         >
-          {pages.map((canvas, index) => (
-            <Page key={index} pageNumber={index + 1} canvas={canvas} />
-          ))}
+          {/* Map spreads: first is cover (single page right), then double pages per spread */}
+          {getSpreads(pages).map((spread, spreadIdx) => {
+            // Spread: [leftPageCanvas, rightPageCanvas]
+            return (
+              <div key={spreadIdx} className="flex w-full h-full">
+                {/* Left page */}
+                <div className="flex-1 flex">
+                  {spread[0] ? (
+                    <Page pageNumber={spreadIdx === 0 ? 1 : spreadIdx * 2} canvas={spread[0]} />
+                  ) : (
+                    // Empty for cover and last right page
+                    <div className="page bg-white shadow-lg flex-1" />
+                  )}
+                </div>
+                {/* Right page */}
+                <div className="flex-1 flex">
+                  {spread[1] ? (
+                    <Page
+                      pageNumber={
+                        spreadIdx === 0
+                          ? 1
+                          : spread[0]
+                            ? spreadIdx * 2 + 1
+                            : spreadIdx * 2
+                      }
+                      canvas={spread[1]}
+                    />
+                  ) : (
+                    <div className="page bg-white shadow-lg flex-1" />
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </HTMLFlipBook>
       </div>
     </div>
