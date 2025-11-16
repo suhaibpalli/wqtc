@@ -2,9 +2,9 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play, Clock, User } from "lucide-react";
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { Play, Clock, User, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 
 // Updated categories/classes
@@ -57,73 +57,191 @@ const categories = [
 const courses = [
   {
     id: 1,
-    title: "Free",
+    title: "Online | Free",
     classType: "Daily",
     category: "English & Urdu · Men",
     instructor: "Ustad Imran Sait",
     image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=400&h=300&fit=crop",
-    students: "2.5K",
-    time: "45 min",
+    students: "45 min",
+    time: "6:45 A.M.",
+    description: "A daily class for men, covering Quran recitation and understanding in English and Urdu.",
   },
   {
     id: 2,
-    title: "Free",
+    title: "Online | Free",
     classType: "Daily",
     category: "English & Urdu · Women",
     instructor: "Ustad Imran Sait",
     image: "https://images.unsplash.com/photo-1513128034602-7814ccaddd4e?w=400&h=300&fit=crop",
-    students: "2.3K",
-    time: "45 min",
+    students: "45 min",
+    time: "6:45 A.M.",
+    description: "A daily class for women, covering Quran recitation and understanding in English and Urdu.",
   },
   {
     id: 3,
-    title: "Free",
+    title: "Online | Free",
     classType: "Daily",
     category: "Tamil · Men",
     instructor: "Ustad Imran Sait",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop",
-    students: "2.8K",
-    time: "60 min",
+    students: "45 min",
+    time: "6:45 A.M.",
+    description: "A daily class for men in Tamil language, focusing on Quranic teachings and recitation.",
   },
   {
     id: 4,
-    title: "Free",
+    title: "Online | Free",
     classType: "Daily",
     category: "Tamil · Women",
     instructor: "Ustad Imran Sait",
     image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&h=300&fit=crop",
-    students: "3.1K",
-    time: "60 min",
+    students: "45 min",
+    time: "6:45 A.M.",
+    description: "A daily class for women in Tamil language, focusing on Quranic teachings and recitation.",
   },
   {
     id: 5,
-    title: "Free",
+    title: "Online | Free",
     classType: "Weekend",
     category: "English & Urdu · Men",
     instructor: "Ustad Imran Sait",
     image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=300&fit=crop",
-    students: "1.4K",
-    time: "2 hrs",
+    students: "45 min",
+    time: "6:45 A.M.",
+    description: "Weekend classes for men for Quran learning, conducted in English and Urdu.",
   },
   {
     id: 6,
-    title: "Free",
+    title: "Online | Free",
     classType: "Weekend",
     category: "English & Urdu · Women",
     instructor: "Ustad Imran Sait",
     image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=300&fit=crop",
     students: "1.2K",
     time: "2 hrs",
+    description: "Weekend classes for women for Quran learning, conducted in English and Urdu.",
   },
 ];
 
+// Modal Component
+function CourseModal({ open, course, onClose }: { open: boolean; course: any; onClose: () => void }) {
+  // Add escape key handler
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (event.key === "Escape" && open) {
+      onClose();
+    }
+  }, [open, onClose]);
+
+  useEffect(() => {
+    if (open) {
+      document.addEventListener("keydown", handleKeyDown);
+      // Optionally trap focus for accessibility
+      if (modalRef.current) {
+        modalRef.current.focus();
+      }
+    } else {
+      document.removeEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open, handleKeyDown]);
+
+  // Close on overlay click
+  function handleOverlayClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  }
+
+  if (!open || !course) return null;
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        tabIndex={-1}
+        onClick={handleOverlayClick}
+        ref={modalRef}
+        aria-modal="true"
+        role="dialog"
+      >
+        <motion.div
+          className="bg-white rounded-2xl max-w-lg w-full p-6 relative shadow-2xl"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 210, damping: 22 }}
+        >
+          <button
+            className="absolute top-4 right-4 text-[#faf9f7] bg-[#453142] hover:bg-[#6e4d66] rounded-full p-2 transition-colors z-10 shadow-lg focus:outline-none focus:ring-2 focus:ring-[#453142]/70"
+            aria-label="Close"
+            onClick={onClose}
+            autoFocus
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <div className="mb-5">
+            <div className="relative h-48 w-full mb-4 rounded-xl overflow-hidden">
+              <Image
+                src={course.image}
+                alt={course.category}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <Badge className="bg-[#453142] text-[#faf9f7] rounded-full px-4 py-1 capitalize text-xs mb-2">
+              {course.classType}
+            </Badge>
+            <h2 className="text-2xl font-bold text-[#453142] mb-2">{course.title}</h2>
+            <p className="font-semibold text-[#453142]/90 mb-2">{course.category}</p>
+          </div>
+          <div className="mb-3 flex items-center gap-2 text-sm text-[#453142]/80">
+            <User className="h-5 w-5 text-[#453142]" />
+            <span>{course.instructor}</span>
+          </div>
+          <div className="mb-2 flex items-center gap-4 text-sm text-[#453142]/70">
+            <div className="flex items-center gap-1">
+              <Clock className="h-4 w-4 text-[#453142]" />
+              <span>{course.time}</span>
+            </div>
+            <div className="font-semibold">{course.students}</div>
+          </div>
+          <div className="mt-4 text-[#453142]/90 text-base">
+            {course.description || "No further details available for this class at the moment."}
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 export default function VideoGallery() {
   const [hoveredCourse, setHoveredCourse] = useState<number | null>(null);
+  const [openCourse, setOpenCourse] = useState<any>(null);
 
   return (
     <section id="videos" className="py-16 md:py-24 bg-[#faf9f7] relative overflow-hidden">
       <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
+        
+        {/* 
+        // -------------------------------------------
+        // The following section is commented as per instruction.
+        // It displays the "Latest Classes" & categories cards grid.
+        // Includes:
+        //   - Section Header:
+        //        Latest Classes
+        //        Live Quran Classes – Organized by Language & Group
+        //   - Categories Cards Grid:
+        //        Daily English & Urdu Classes (Men/Women)
+        //        Daily Tamil Classes (Men/Women)
+        //        Weekend Classes in English & Urdu (Men/Women)
+        // -------------------------------------------
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -146,7 +264,6 @@ export default function VideoGallery() {
           </h2>
         </motion.div>
 
-        {/* Categories Grid – Language/Gender Groups */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {categories.map((category, index) => (
             <motion.div
@@ -159,17 +276,14 @@ export default function VideoGallery() {
             >
               <Card className="group relative overflow-hidden cursor-pointer border-0 shadow-xl h-full rounded-3xl">
                 <div className="relative h-56">
-                  {/* Background Image */}
                   <Image
                     src={category.image}
                     alt={category.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  {/* Gradient Overlay */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient}`} />
                   <div className="absolute inset-0 bg-[#453142]/20 group-hover:bg-[#faf9f7]/10 transition-colors" />
-                  {/* Content */}
                   <div className="absolute inset-0 flex flex-col justify-end items-start p-6">
                     <div className="relative z-10">
                       <h3 className="text-xl font-extrabold mb-1 text-[#faf9f7] group-hover:text-[#453142] transition-colors">
@@ -183,6 +297,7 @@ export default function VideoGallery() {
             </motion.div>
           ))}
         </div>
+        */}
 
         {/* Courses Section */}
         <motion.div
@@ -191,7 +306,7 @@ export default function VideoGallery() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-8 text-[#453142]">All Class Schedules</h2>
+          <h2 className="text-3xl md:text-5xl font-bold mb-8 text-[#453142]">Online Free Quran Class Schedules</h2>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -204,6 +319,11 @@ export default function VideoGallery() {
               transition={{ delay: index * 0.1 }}
               onMouseEnter={() => setHoveredCourse(course.id)}
               onMouseLeave={() => setHoveredCourse(null)}
+              onClick={() => setOpenCourse(course)}
+              tabIndex={0}
+              role="button"
+              aria-label={`Open details about ${course.category}`}
+              style={{ cursor: "pointer" }}
             >
               <Card className="group hover:shadow-2xl transition-all duration-300 overflow-hidden border-0 shadow-lg rounded-3xl">
                 <div className="relative h-44 overflow-hidden">
@@ -249,13 +369,15 @@ export default function VideoGallery() {
                       <Clock className="h-4 w-4 text-[#453142]" />
                       <span>{course.time}</span>
                     </div>
-                    <span className="font-semibold">{course.students} Students</span>
+                    <span className="font-semibold">{course.students}</span>
                   </div>
                 </CardContent>
               </Card>
             </motion.div>
           ))}
         </div>
+        {/* Modal for showing more details */}
+        <CourseModal open={!!openCourse} course={openCourse} onClose={() => setOpenCourse(null)} />
       </div>
     </section>
   );

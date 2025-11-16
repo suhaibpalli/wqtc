@@ -20,8 +20,11 @@ const navLinks = [
     ],
   },
   {
-    href: "/english-translation",
-    label: "English Translation",
+    label: "Translations",
+    submenu: [
+      { href: "/library/ebooks", label: "English" },
+      { href: "/library/ebooks-urdu", label: "Urdu" },
+    ],
   },
   {
     label: "Resource Library",
@@ -67,20 +70,22 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
+  // Switch to specified purple background, make text bold, and increase font size
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-[#453142] backdrop-blur supports-[backdrop-filter]:bg-[#453142]">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo - UPDATED WITH SVG */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="h-12 w-12 flex items-center justify-center transition-transform group-hover:scale-105">
+            <div className="h-16 w-16 flex items-center justify-center transition-transform group-hover:scale-105">
               <svg
                 viewBox="0 0 1200 900"
-                className="h-full w-full text-[#453142]"
+                className="h-full w-full text-[#e0def4]"
                 fill="currentColor"
                 aria-label="WQTC Logo"
               >
                 <g>
+                  {/* unchanged SVG (only color updated above) */}
                   <path
                     d="M637.9,563.7c-4.4,1.7-8.9,3.3-13.6,5.1c0-52.2,0-104.1,0-156.6c15.6-5,31.3-10.1,47-15.2
                     c30.4-9.8,60.8-19.6,91.2-29.2c2.2-0.7,5.4-0.8,7.3,0.2c42.9,24.6,85.6,49.3,128.4,74.1c0.7,0.4,1.4,1,2.5,1.7
@@ -138,9 +143,9 @@ export default function Navbar() {
                 </g>
               </svg>
             </div>
-            <span className="font-bold text-xl hidden sm:block text-[#453142]">
+            {/* <span className="font-extrabold text-2xl hidden sm:block text-[#e0def4]">
               WQTC
-            </span>
+            </span> */}
           </Link>
 
           {/* Desktop Navigation */}
@@ -154,14 +159,13 @@ export default function Navbar() {
                   onMouseEnter={() => setOpenDropdown(link.label)}
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
-                  <button className="text-sm font-medium hover:text-[#453142] transition-colors flex items-center gap-1">
+                  <button className="text-lg text-[#e0def4] hover:text-[#cdabff] transition-colors flex items-center gap-1">
                     {link.label}
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="h-5 w-5" />
                   </button>
-                  
                   {/* Dropdown Content */}
                   <div
-                    className={`absolute left-0 top-full mt-2 w-56 bg-[#faf9f7] rounded-lg shadow-lg border border-[#453142]/20 py-2 transition-all duration-200 ${
+                    className={`absolute left-0 top-full mt-2 w-64 bg-[#57355e] rounded-lg shadow-lg border border-[#e0def4]/20 py-2 transition-all duration-200 ${
                       openDropdown === link.label
                         ? "opacity-100 visible translate-y-0"
                         : "opacity-0 invisible -translate-y-2"
@@ -171,7 +175,7 @@ export default function Navbar() {
                       <Link
                         key={sublink.href}
                         href={sublink.href}
-                        className="block px-4 py-2 text-sm text-[#453142] hover:bg-[#453142]/10 hover:text-[#453142] transition-colors"
+                        className="block px-5 py-3 text-base text-[#e0def4] hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors"
                       >
                         {sublink.label}
                       </Link>
@@ -183,10 +187,10 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm font-medium hover:text-[#453142] transition-colors relative group"
+                  className="text-lg text-[#e0def4] hover:text-[#cdabff] transition-colors relative group"
                 >
                   {link.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#453142] group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-1 bg-[#cdabff] group-hover:w-full transition-all duration-300"></span>
                 </Link>
               )
             )}
@@ -202,7 +206,7 @@ export default function Navbar() {
                   variant="ghost"
                   size="icon"
                   asChild
-                  className="hover:text-[#453142] hover:bg-[#453142]/10"
+                  className="hover:text-[#cdabff] hover:bg-[#cdabff]/10"
                 >
                   <a
                     href={social.href}
@@ -210,7 +214,7 @@ export default function Navbar() {
                     rel="noopener noreferrer"
                     aria-label={social.label}
                   >
-                    <social.icon className="h-5 w-5" />
+                    <social.icon className="h-6 w-6 text-[#e0def4]" />
                   </a>
                 </Button>
               ))}
@@ -224,14 +228,14 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X /> : <Menu />}
+              {mobileMenuOpen ? <X className="text-[#e0def4]" /> : <Menu className="text-[#e0def4]" />}
             </Button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 space-y-3 border-t pt-4">
+          <div className="lg:hidden mt-4 pb-4 space-y-3 border-t border-[#57355e] pt-4 bg-[#57355e] rounded-xl shadow-lg">
             {navLinks.map((link) =>
               link.submenu ? (
                 // Mobile Dropdown
@@ -240,16 +244,15 @@ export default function Navbar() {
                     onClick={() =>
                       setOpenDropdown(openDropdown === link.label ? null : link.label)
                     }
-                    className="w-full flex items-center justify-between py-2 px-3 rounded-md hover:bg-[#453142]/10 hover:text-[#453142] transition-colors text-left font-medium"
+                    className="w-full flex items-center justify-between py-3 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-left text-lg text-[#e0def4]"
                   >
                     {link.label}
                     <ChevronDown
-                      className={`h-4 w-4 transition-transform ${
+                      className={`h-5 w-5 text-[#e0def4] transition-transform ${
                         openDropdown === link.label ? "rotate-180" : ""
                       }`}
                     />
                   </button>
-                  
                   {/* Mobile Submenu */}
                   {openDropdown === link.label && (
                     <div className="pl-4 space-y-1">
@@ -257,7 +260,7 @@ export default function Navbar() {
                         <Link
                           key={sublink.href}
                           href={sublink.href}
-                          className="block py-2 px-3 rounded-md hover:bg-[#453142]/10 hover:text-[#453142] transition-colors text-sm"
+                          className="block py-2 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-base text-[#e0def4]"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {sublink.label}
@@ -271,7 +274,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block py-2 px-3 rounded-md hover:bg-[#453142]/10 hover:text-[#453142] transition-colors"
+                  className="block py-3 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-lg text-[#e0def4]"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -282,14 +285,20 @@ export default function Navbar() {
             {/* Mobile Social Icons */}
             <div className="flex gap-3 pt-2">
               {socialLinks.map((social) => (
-                <Button key={social.label} variant="outline" size="icon" asChild>
+                <Button
+                  key={social.label}
+                  variant="outline"
+                  size="icon"
+                  asChild
+                  className="border-[#cdabff] hover:text-[#cdabff] hover:bg-[#cdabff]/10"
+                >
                   <a
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
                   >
-                    <social.icon className="h-5 w-5" />
+                    <social.icon className="h-6 w-6 text-[#e0def4]" />
                   </a>
                 </Button>
               ))}

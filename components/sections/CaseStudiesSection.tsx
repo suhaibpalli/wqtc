@@ -1,128 +1,129 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
+import { Laptop, Lightbulb, Languages, Clock, Brain, BadgeCheck } from "lucide-react";
 
-const caseStudies = [
+// Use the two-color palette for all feature cards
+const features = [
   {
-    id: 1,
-    title: "TECHNOLOGY",
-    subtitle: "Explore Latest",
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&h=400&fit=crop",
-    gradient: "from-purple-600/80 to-pink-600/80",
+    name: "Online Classes",
+    description:
+      "Attend live, interactive Word for Word Quran classes from anywhere in the world, guided by experienced instructors.",
+    icon: Laptop,
+    // bg light, text dark
+    color: "bg-[#faf9f7] text-[#453142]",
   },
   {
-    id: 2,
-    title: "Classifying Best Electronic Hacks",
-    subtitle: "Learn More",
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=400&fit=crop",
-    gradient: "from-pink-500/80 to-purple-600/80",
+    name: "Easy Methodology",
+    description:
+      "Learn Quran translation through a unique Word for Word teaching method, making understanding effortless for all levels.",
+    icon: Lightbulb,
+    color: "bg-[#faf9f7] text-[#453142]",
   },
   {
-    id: 3,
-    title: "Industry Labor Superb AI",
-    subtitle: "Stay Updated",
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=400&fit=crop",
-    gradient: "from-blue-600/80 to-cyan-600/80",
+    name: "Multiple Languages",
+    description:
+      "Our Word for Word Quran courses are offered in English, Urdu, and Tamil to make learning accessible to everyone.",
+    icon: Languages,
+    color: "bg-[#faf9f7] text-[#453142]",
   },
   {
-    id: 4,
-    title: "Education Super AI",
-    subtitle: "Transform Learning",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&h=400&fit=crop",
-    gradient: "from-cyan-500/80 to-teal-600/80",
+    name: "Flexible Time",
+    description:
+      "Choose timings that suit your schedule. Our flexible batch system for Word for Word classes fits your daily routine.",
+    icon: Clock,
+    color: "bg-[#faf9f7] text-[#453142]",
+  },
+  {
+    name: "Greater Understanding",
+    description:
+      "Gain deeper meaning and true understanding of the Quran by studying each word and its translation in context.",
+    icon: Brain,
+    color: "bg-[#faf9f7] text-[#453142]",
+  },
+  {
+    name: "Certified Teachers",
+    description:
+      "Learn from experienced and certified instructors who specialize in Word for Word Quran translation, ensuring quality and authenticity in every lesson.",
+    icon: BadgeCheck,
+    color: "bg-[#faf9f7] text-[#453142]",
   },
 ];
 
 export default function CaseStudiesSection() {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-white via-slate-50 to-white relative overflow-hidden">
-      {/* Dotted Grid Pattern */}
-      <div className="absolute inset-0 opacity-[0.15]">
-        <div 
-          className="absolute inset-0" 
+    <section className="py-16 md:py-24 bg-white relative overflow-hidden">
+      {/* Decorative Dotted Grid */}
+      <div className="absolute inset-0 opacity-16 pointer-events-none z-0">
+        <div
+          className="absolute inset-0"
           style={{
-            backgroundImage: `radial-gradient(circle, #64748b 1px, transparent 1px)`,
-            backgroundSize: '30px 30px'
-          }} 
+            backgroundImage: `radial-gradient(circle, #45314222 1px, transparent 1px)`,
+            backgroundSize: "30px 30px",
+          }}
         />
       </div>
-
-      {/* Gradient Overlay Circles */}
+      {/* Decorative Gradient Circle */}
       <motion.div
-        animate={{ 
+        animate={{
           scale: [1, 1.1, 1],
-          opacity: [0.3, 0.5, 0.3]
+          opacity: [0.22, 0.33, 0.22],
         }}
-        transition={{ duration: 8, repeat: Infinity }}
-        className="absolute top-1/4 right-10 w-96 h-96 bg-gradient-to-br from-emerald-300/20 to-teal-300/20 rounded-full blur-3xl"
+        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        className="absolute top-[12%] right-20 w-96 h-96 bg-gradient-to-br from-[#453142]/10 to-[#faf9f7]/55 rounded-full blur-3xl z-0"
       />
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          // Increased width for this intro block: max-w-4xl instead of max-w-2xl
+          className="text-center mb-12 max-w-4xl mx-auto"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            Differentiating through case studies<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">
-              Machine learning.
-            </span>
+          <h2 className="text-3xl md:text-5xl font-bold mb-2 text-[#453142]">
+            Why Choose Us?
           </h2>
+          <p className="text-lg text-[#453142]/80">
+            We believe that authentic knowledge of the Quran is the key to better understand Islam and steer away from the misconceptions and superstitions. We are dedicated to spread the understanding of the Quran and Free translation of the Quran word by word. Our focus is to help the ummah build a strong relationship with the Quran using the simple Word for word learning technique.
+          </p>
         </motion.div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {caseStudies.map((study, index) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {features.map((feature, index) => (
             <motion.div
-              key={study.id}
+              key={feature.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -8 }}
+              transition={{ delay: index * 0.08 }}
+              whileHover={{ y: -8, transition: { duration: 0.22 } }}
+              className="flex justify-center"
             >
-              <Card className="group relative overflow-hidden cursor-pointer border-0 shadow-xl h-80 rounded-3xl">
-                {/* Background Image */}
-                <Image
-                  src={study.image}
-                  alt={study.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                
-                {/* Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${study.gradient} mix-blend-multiply`} />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
-                
-                {/* Content */}
-                <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                  <Badge className="w-fit mb-3 bg-white/20 backdrop-blur-sm text-white border-white/30">
-                    {study.subtitle}
-                  </Badge>
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    {study.title}
-                  </h3>
+              <Card className="group relative overflow-hidden border-0 shadow-md hover:shadow-2xl transition-all duration-300 h-full bg-white rounded-3xl w-full max-w-[340px] flex flex-col">
+                <CardContent className="flex flex-col flex-1 p-7 space-y-5 items-center text-center">
                   <motion.div
-                    initial={{ x: -10, opacity: 0 }}
-                    whileHover={{ x: 0, opacity: 1 }}
-                    className="text-white font-semibold flex items-center gap-2"
+                    animate={{ scale: [1, 1.09, 1], rotate: [0, 6, 0] }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.1,
+                    }}
+                    className={`w-14 h-14 ${feature.color} rounded-full flex items-center justify-center shadow-md mb-2 border-2 border-[#453142]/10`}
                   >
-                    Read More
-                    <span>→</span>
+                    <feature.icon className="w-8 h-8" />
                   </motion.div>
-                </div>
-
-                {/* Shine Effect */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: "100%" }}
-                  transition={{ duration: 0.6 }}
-                />
+                  <div className="font-extrabold text-lg text-[#453142]">
+                    {feature.name}
+                  </div>
+                  <div className="text-[#453142]/85 text-sm leading-relaxed">
+                    {feature.description}
+                  </div>
+                  <div className="flex-1" />
+                </CardContent>
+                {/* Subtle hover overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#faf9f7]/0 to-[#453142]/10 group-hover:from-[#faf9f7]/20 group-hover:to-[#453142]/15 transition-all duration-300 pointer-events-none" />
               </Card>
             </motion.div>
           ))}

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Users, Play, Video, Globe } from "lucide-react";
+import { Play } from "lucide-react";
 import Image from "next/image";
 
 export default function WelcomeSection() {
@@ -18,12 +18,12 @@ export default function WelcomeSection() {
             transition={{ duration: 0.6 }}
             className="flex items-center justify-center"
           >
-            <div className="relative w-full max-w-2xl mx-auto"> {/* increased from max-w-lg to max-w-2xl */}
+            <div className="relative w-full max-w-2xl mx-auto">
               <Image
                 src="https://wordforwordquran.com/assets/q/mainbanner.png"
                 alt="Ustaad Imran Sait - Quran Teacher"
-                width={1200} // increased from 800
-                height={1200} // increased from 800
+                width={1200}
+                height={1200}
                 className="object-contain drop-shadow-2xl"
                 priority
               />
@@ -64,60 +64,6 @@ export default function WelcomeSection() {
               >
                 Learn More
               </Button>
-            </div>
-
-            {/* Mini stats with animated icons */}
-            <div className="grid grid-cols-3 gap-4 pt-6">
-              {[
-                { 
-                  label: "Students", 
-                  value: "5K+", 
-                  icon: Users,
-                  gradient: "from-[#453142] to-[#5a3f54]"
-                },
-                { 
-                  label: "Classes", 
-                  value: "200+", 
-                  icon: Video,
-                  gradient: "from-[#5a3f54] to-[#6e4d66]"
-                },
-                { 
-                  label: "Languages", 
-                  value: "3", 
-                  icon: Globe,
-                  gradient: "from-[#6e4d66] to-[#453142]"
-                },
-              ].map((stat, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="text-center"
-                >
-                  {/* Animated Icon Container */}
-                  <motion.div
-                    animate={{ 
-                      y: [0, -5, 0],
-                      rotate: [0, 5, -5, 0]
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      delay: idx * 0.2
-                    }}
-                    className="mb-3 flex justify-center"
-                  >
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-lg`}>
-                      <stat.icon className="w-8 h-8 text-[#faf9f7]" />
-                    </div>
-                  </motion.div>
-                  
-                  <div className="text-2xl font-bold text-[#453142]">{stat.value}</div>
-                  <div className="text-sm text-[#453142]/70">{stat.label}</div>
-                </motion.div>
-              ))}
             </div>
           </motion.div>
         </div>

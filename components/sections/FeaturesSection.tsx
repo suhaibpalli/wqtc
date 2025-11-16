@@ -2,37 +2,66 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { BookOpen, Languages, Globe, ChevronRight } from "lucide-react";
+
+// Define letter-based icons for each language
+function EnglishLetterIcon() {
+  return (
+    <span className="text-3xl font-extrabold text-[#453142] leading-none select-none" style={{ fontFamily: 'Inter, Arial, sans-serif' }}>
+      A
+    </span>
+  );
+}
+function UrduLetterIcon() {
+  // Single Urdu/Arabic letter: ا
+  return (
+    <span className="text-2xl font-extrabold text-[#453142] leading-none select-none" style={{ fontFamily: 'Amiri, Arial, serif' }}>
+      ا
+    </span>
+  );
+}
+function TamilLetterIcon() {
+  // Single Tamil character: அ
+  return (
+    <span className="text-2xl font-extrabold text-[#453142] leading-none select-none" style={{ fontFamily: "'Noto Sans Tamil', Arial, sans-serif" }}>
+      அ
+    </span>
+  );
+}
+function OtherLetterIcon() {
+  return (
+    <span className="text-xl font-semibold text-[#453142] leading-none select-none tracking-wide">
+      ...
+    </span>
+  );
+}
 
 // Define language cards
 const languages = [
   {
     name: "English",
     description: "Free Online Quran Classes in English. Learn Quran online with qualified teachers.",
-    icon: BookOpen,
+    icon: EnglishLetterIcon,
     color: "bg-[#453142]/10 text-[#453142]",
     highlight: "EN",
   },
   {
     name: "Urdu",
-    // Use translation markup for Urdu text
     description: "[translate:اردو میں مفت آن لائن قرآن کلاسز\nاپنے گھر کے آرام سے آن لائن قرآن سیکھیں، ہمارے ماہر اساتذہ کی رہنمائی میں۔]",
-    icon: Languages,
+    icon: UrduLetterIcon,
     color: "bg-[#453142]/10 text-[#453142]",
     highlight: "اردو",
   },
   {
     name: "Tamil",
-    // Use translation markup for Tamil text
     description: "[translate:இலவச ஆன்லைன் குர்ஆன் வகுப்புகள்\nஉங்கள் வீட்டில் இருந்து விரிவான வகுப்புகள், ஆசிரியர்களுடன்.]",
-    icon: Globe,
+    icon: TamilLetterIcon,
     color: "bg-[#453142]/10 text-[#453142]",
     highlight: "தமிழ்",
   },
   {
     name: "Other",
     description: "Want classes in a different language? Reach out for more options and support.",
-    icon: ChevronRight,
+    icon: OtherLetterIcon,
     color: "bg-[#453142]/10 text-[#453142]",
     highlight: "Other",
   },
@@ -72,7 +101,7 @@ export default function FeaturesSection() {
             Join online Quran courses in English, Urdu, Tamil, or more—accessible to everyone.
           </p>
         </motion.div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {languages.map((lang, index) => (
             <motion.div
               key={lang.name}
@@ -81,15 +110,18 @@ export default function FeaturesSection() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -8, transition: { duration: 0.2 } }}
+              className="flex justify-center"
             >
-              <Card className="group relative overflow-hidden border-0 shadow-md hover:shadow-2xl transition-all duration-300 h-full bg-white rounded-3xl">
-                <CardContent className="p-6 space-y-4">
+              {/* Make parent flex column and CardContent grow to align View Classes button */}
+              <Card className="group relative overflow-hidden border-0 shadow-md hover:shadow-2xl transition-all duration-300 h-full bg-white rounded-3xl w-full max-w-[350px] flex flex-col">
+                <CardContent className="flex flex-col flex-1 p-6 space-y-4">
                   <motion.div
                     animate={{ scale: [1, 1.12, 1], rotate: [0, 9, 0] }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.15 }}
                     className={`w-14 h-14 ${lang.color} rounded-full flex items-center justify-center shadow-md mx-auto mb-2`}
                   >
-                    <lang.icon className="w-7 h-7" />
+                    {/* Instead of icon, show the letters */}
+                    <lang.icon />
                   </motion.div>
                   <div className="text-center">
                     <div className="font-extrabold text-lg text-[#453142] mb-1">{lang.name}</div>
@@ -100,13 +132,15 @@ export default function FeaturesSection() {
                   {/* Maintain correct markup for translation in descriptions */}
                   <div className="text-[#453142]/85 text-sm leading-relaxed text-center min-h-[52px]">
                     {lang.name === "Urdu" ? (
-                      <span>[translate:اردو میں مفت آن لائن قرآن کلاسز<br/>اپنے گھر کے آرام سے آن لائن قرآن سیکھیں، ہمارے ماہر اساتذہ کی رہنمائی میں۔]</span>
+                      <span>اردو میں مفت آن لائن قرآن کلاسز<br/>اپنے گھر کے آرام سے آن لائن قرآن سیکھیں، ہمارے ماہر اساتذہ کی رہنمائی میں۔</span>
                     ) : lang.name === "Tamil" ? (
-                      <span>[translate:இலவச ஆன்லைன் குர்ஆன் வகுப்புகள்<br/>உங்கள் வீட்டில் இருந்து விரிவான வகுப்புகள், ஆசிரியர்களுடன்.]</span>
+                      <span>இலவச ஆன்லைன் குர்ஆன் வகுப்புகள்<br/>உங்கள் வீட்டில் இருந்து விரிவான வகுப்புகள், ஆசிரியர்களுடன்.</span>
                     ) : (
                       lang.description
                     )}
                   </div>
+                  {/* Spacer to push the button down if needed */}
+                  <div className="flex-1" />
                   <button
                     className="w-full mt-2 py-2 rounded-xl bg-[#453142] text-[#faf9f7] font-semibold text-sm hover:bg-[#5a3f54] transition-all"
                   >
