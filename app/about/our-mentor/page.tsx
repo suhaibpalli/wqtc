@@ -5,47 +5,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
-  Award, 
-  BookOpen, 
-  GraduationCap, 
+  GraduationCap,
   Users, 
   Globe, 
   Heart,
   Quote,
   Play
 } from 'lucide-react';
-import Image from 'next/image';
-// Removed `use client` and export for metadata
+// DO NOT import or use next/image for external unconfigured sources
+// import Image from 'next/image';
 
-// You should move the below metadata export to a server component or `layout.tsx`
-// export const metadata: Metadata = { ... }
-
-const achievements = [
-  {
-    icon: Users,
-    number: '50,000+',
-    label: 'Students Worldwide',
-    color: 'from-blue-500 to-cyan-500',
-  },
-  {
-    icon: Globe,
-    number: '25+',
-    label: 'Countries Reached',
-    color: 'from-purple-500 to-pink-500',
-  },
-  {
-    icon: BookOpen,
-    number: '15+',
-    label: 'Years Teaching',
-    color: 'from-orange-500 to-red-500',
-  },
-  {
-    icon: Award,
-    number: '100+',
-    label: 'Courses Delivered',
-    color: 'from-green-500 to-emerald-500',
-  },
-];
+// No statistics/achievements now
 
 const timeline = [
   {
@@ -95,13 +65,13 @@ const qualities = [
 
 export default function OurMentorPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#faf9f7] to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#faf9f7] to-[#faf9f7]">
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
         {/* Background Decorations */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-20 right-0 w-96 h-96 bg-[#453142]/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#453142]/10 rounded-full blur-3xl" />
         </div>
 
         <div className="container mx-auto px-4">
@@ -118,7 +88,7 @@ export default function OurMentorPage() {
               </Badge>
               
               <h1 className="text-4xl md:text-6xl font-bold text-[#453142] leading-tight">
-                Ustaad <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Imran Sait</span>
+                Ustaad <span className="text-[#453142] bg-clip-text">Imran</span> <span className="text-[#453142] bg-clip-text">Sait</span>
               </h1>
               
               <p className="text-xl text-[#453142]/80 leading-relaxed">
@@ -128,7 +98,7 @@ export default function OurMentorPage() {
               <div className="flex flex-wrap gap-4">
                 <Button 
                   size="lg" 
-                  className="bg-[#453142] hover:bg-[#2d1c26] text-white shadow-lg"
+                  className="bg-[#453142] hover:bg-[#2d1c26] text-[#faf9f7] shadow-lg"
                 >
                   <Play className="mr-2 h-5 w-5" />
                   Watch Introduction
@@ -142,41 +112,28 @@ export default function OurMentorPage() {
                 </Button>
               </div>
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8">
-                {achievements.map((achievement, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 + 0.3 }}
-                    className="text-center"
-                  >
-                    <div className={`w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-br ${achievement.color} flex items-center justify-center`}>
-                      <achievement.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <p className="text-2xl font-bold text-[#453142]">{achievement.number}</p>
-                    <p className="text-sm text-[#453142]/60">{achievement.label}</p>
-                  </motion.div>
-                ))}
-              </div>
+              {/* No Quick Stats */}
             </motion.div>
 
-            {/* Right - Image */}
+            {/* Right - Actual Ustaad Image */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative"
             >
-              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
-                {/* Placeholder - Replace with actual image */}
-                <div className="w-full h-full bg-gradient-to-br from-[#453142] to-[#6e4d66] flex items-center justify-center">
-                  <Users className="w-32 h-32 text-white/30" />
-                </div>
-                
+              {/* Replace next/image usage with native <img> for unconfigured external src */}
+              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl bg-[#faf9f7]">
+                <img
+                  src="https://wordforwordquran.amlc.in/wp-content/uploads/2025/09/Kd2k4nPY_NA-HD.jpg"
+                  alt="Ustaad Imran Sait"
+                  className="object-cover w-full h-full absolute inset-0"
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  loading="eager"
+                  fetchPriority="high"
+                />
                 {/* Overlay Quote Card */}
-                <div className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-md rounded-xl p-6 shadow-xl">
+                <div className="absolute bottom-8 left-8 right-8 bg-[#faf9f7]/95 backdrop-blur-md rounded-xl p-6 shadow-xl border border-[#453142]/10">
                   <Quote className="h-8 w-8 text-[#453142] mb-2" />
                   <p className="text-[#453142] italic font-medium">
                     "Understanding the Quran is not just about translation - it's about transforming lives."
@@ -186,7 +143,7 @@ export default function OurMentorPage() {
               </div>
 
               {/* Floating Badge */}
-              <div className="absolute -top-4 -right-4 bg-gradient-to-br from-orange-500 to-red-500 text-white px-6 py-3 rounded-full shadow-lg font-bold">
+              <div className="absolute -top-4 -right-4 bg-gradient-to-br from-[#453142] to-[#6e4d66] text-[#faf9f7] px-6 py-3 rounded-full shadow-lg font-bold">
                 15+ Years Experience
               </div>
             </motion.div>
@@ -195,7 +152,7 @@ export default function OurMentorPage() {
       </section>
 
       {/* Biography Section */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-[#faf9f7]">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -204,7 +161,7 @@ export default function OurMentorPage() {
             className="max-w-4xl mx-auto"
           >
             <div className="text-center mb-12">
-              <Badge className="mb-4 bg-purple-100 text-purple-700">Biography</Badge>
+              <Badge className="mb-4 bg-[#453142]/10 text-[#453142]">Biography</Badge>
               <h2 className="text-3xl md:text-5xl font-bold text-[#453142] mb-4">
                 The Journey of a Visionary
               </h2>
@@ -223,7 +180,7 @@ export default function OurMentorPage() {
                 What started as informal sessions in a small mosque in Chennai has now grown into a global movement. Ustaad Imran's classes have reached students across India, USA, UK, Middle East, and Southeast Asia. His approach combines traditional Islamic scholarship with modern educational techniques, making the Quran accessible to people of all ages and backgrounds.
               </p>
 
-              <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-purple-500 my-8">
+              <Card className="bg-gradient-to-r from-[#faf9f7] to-[#faf9f7] border-l-4 border-[#453142] my-8">
                 <CardContent className="p-6">
                   <p className="text-[#453142] leading-relaxed italic">
                     "My mission is simple: to help every Muslim develop a personal, meaningful relationship with the Quran by understanding its message in their own language. When you understand what Allah is saying to you, your life transforms."
@@ -241,7 +198,7 @@ export default function OurMentorPage() {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-[#faf9f7] to-white">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-[#faf9f7] to-[#faf9f7]">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -269,12 +226,12 @@ export default function OurMentorPage() {
                 className="relative pl-8 pb-12 border-l-4 border-[#453142]/20 last:pb-0"
               >
                 {/* Timeline Dot */}
-                <div className="absolute left-0 top-0 -translate-x-1/2 w-8 h-8 rounded-full bg-gradient-to-br from-[#453142] to-purple-600 flex items-center justify-center shadow-lg">
-                  <div className="w-3 h-3 bg-white rounded-full" />
+                <div className="absolute left-0 top-0 -translate-x-1/2 w-8 h-8 rounded-full bg-gradient-to-br from-[#453142] to-[#6e4d66] flex items-center justify-center shadow-lg">
+                  <div className="w-3 h-3 bg-[#faf9f7] rounded-full" />
                 </div>
 
                 <div className="ml-8">
-                  <Badge className="mb-2 bg-purple-100 text-purple-700">{item.year}</Badge>
+                  <Badge className="mb-2 bg-[#453142]/10 text-[#453142]">{item.year}</Badge>
                   <h3 className="text-2xl font-bold text-[#453142] mb-2">{item.title}</h3>
                   <p className="text-[#453142]/70 leading-relaxed">{item.description}</p>
                 </div>
@@ -285,7 +242,7 @@ export default function OurMentorPage() {
       </section>
 
       {/* Qualities Section */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-[#faf9f7]">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -293,7 +250,7 @@ export default function OurMentorPage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <Badge className="mb-4 bg-green-100 text-green-700">Qualities</Badge>
+            <Badge className="mb-4 bg-[#453142]/10 text-[#453142]">Qualities</Badge>
             <h2 className="text-3xl md:text-5xl font-bold text-[#453142] mb-4">
               What Makes Him Special
             </h2>
@@ -309,10 +266,10 @@ export default function OurMentorPage() {
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -8 }}
               >
-                <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300">
+                <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-[#faf9f7]">
                   <CardContent className="p-6 text-center space-y-4">
-                    <div className="w-16 h-16 mx-auto bg-gradient-to-br from-[#453142] to-purple-600 rounded-2xl flex items-center justify-center">
-                      <quality.icon className="h-8 w-8 text-white" />
+                    <div className="w-16 h-16 mx-auto bg-gradient-to-br from-[#453142] to-[#6e4d66] rounded-2xl flex items-center justify-center">
+                      <quality.icon className="h-8 w-8 text-[#faf9f7]" />
                     </div>
                     <h3 className="text-xl font-bold text-[#453142]">{quality.title}</h3>
                     <p className="text-[#453142]/70">{quality.description}</p>
@@ -325,7 +282,7 @@ export default function OurMentorPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-[#453142] to-purple-900 text-white">
+      <section className="py-16 md:py-24 bg-gradient-to-br from-[#453142] to-[#6e4d66] text-[#faf9f7]">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -336,14 +293,14 @@ export default function OurMentorPage() {
             <h2 className="text-3xl md:text-5xl font-bold">
               Join Thousands of Students Worldwide
             </h2>
-            <p className="text-xl text-white/80">
+            <p className="text-xl text-[#faf9f7]/80">
               Begin your transformative journey of understanding the Quran with Ustaad Imran Sait
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Button size="lg" className="bg-white text-[#453142] hover:bg-gray-100">
+              <Button size="lg" className="bg-[#faf9f7] text-[#453142] hover:bg-[#f3eae8]">
                 Enroll Now - Free
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button size="lg" variant="outline" className="border-[#faf9f7] text-[#faf9f7] hover:bg-[#faf9f7]/10">
                 View Class Schedule
               </Button>
             </div>

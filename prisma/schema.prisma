@@ -63,3 +63,26 @@ model EBook {
   @@index([createddate])
   @@map("tbl_ebook")
 }
+
+model ClassRegistration {
+  id              Int       @id @default(autoincrement())
+  name            String
+  email           String
+  phone           String
+  whatsapp        String?
+  country         String    @default("India")
+  language        String
+  classType       String
+  timing          String
+  days            String
+  contactNumber   String
+  additionalNotes String?
+  status          String    @default("pending")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("tbl_class_registration")
+}

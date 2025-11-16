@@ -139,7 +139,7 @@ export default function VisionMissionPage() {
       </section>
 
       {/* Impact Stats */}
-      <section className="py-16 bg-gradient-to-br from-[#453142] to-purple-900 text-white -mt-10">
+      {/* <section className="py-16 bg-gradient-to-br from-[#453142] to-purple-900 text-white -mt-10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {impact.map((stat, index) => (
@@ -160,7 +160,7 @@ export default function VisionMissionPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Vision Section */}
       <section className="py-16 md:py-24 bg-white">
