@@ -49,3 +49,17 @@ model User {
 
   @@map("tbl_user")
 }
+
+model EBook {
+  id           Int      @id @default(autoincrement())
+  title        String
+  filename     String   // PDF filename stored in public/pdfs/
+  coverImage   String?  // Cover image path
+  description  String?
+  pages        Int?     // Number of pages
+  createddate  DateTime @default(now())
+  createdby    String   @default("WQTCTeam")
+
+  @@index([createddate])
+  @@map("tbl_ebook")
+}

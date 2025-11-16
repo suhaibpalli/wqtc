@@ -42,3 +42,7 @@ next-env.d.ts
 code_dumpy.py
 codebase_export.txt
 /lib/generated/prisma
+
+# Uploaded PDFs
+/public/pdfs/*
+!/public/pdfs/.gitkeep

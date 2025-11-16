@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Search, X, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
+import Image from 'next/image'; // Import Next.js Image
 
 // Dynamic import with SSR disabled to avoid DOMMatrix error
 const PDFFlipbook = dynamic(() => import('@/components/flipbook/PDFFlipbook'), {
@@ -30,31 +31,53 @@ interface EBook {
   pages?: number;
 }
 
-// Sample ebooks - you can later fetch from API/database
-const ebooks: EBook[] = [
-  {
-    id: 1,
-    title: 'Juz 1 - الم (Alif Laam Meem)',
-    filename: 'Juz_1_WQTC English Translation.pdf',
-    coverImage: '/cover_pages/WhatsApp Image 2025-11-15 at 14.44.48.jpeg',
-    description: 'Word for Word English Translation of Juz 1 (Surah Al-Fatihah and Al-Baqarah)',
-    pages: 30
-  }
-];
-
 export default function EBooksPage() {
+  const [ebooks, setEbooks] = useState<EBook[]>([]);
   const [selectedEbook, setSelectedEbook] = useState<EBook | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [hoveredBookId, setHoveredBookId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const filteredEbooks = ebooks.filter(book =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const ebooksPerPage = 12;
+
+  useEffect(() => {
+    fetchEBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, searchTerm]);
+
+  const fetchEBooks = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/ebooks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sort: 'DESC',
+          page: currentPage,
+          perPage: ebooksPerPage,
+          search: searchTerm,
+        }),
+      });
+      const data = await res.json();
+      setEbooks(data.result || []);
+      if (data.pagination) {
+        setTotalPages(data.pagination.totalPages);
+        setTotal(data.pagination.total);
+      }
+    } catch (error) {
+      console.error('Error fetching ebooks:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Download handler for PDF files in /public/pdfs/
   const handleDownload = (filename: string) => {
     const fileUrl = `/pdfs/${filename}`;
-    // Create an invisible anchor and click it
     const link = document.createElement('a');
     link.href = fileUrl;
     link.download = filename;
@@ -79,6 +102,11 @@ export default function EBooksPage() {
           <p className="text-[#453142]/80 text-lg">
             Browse and read our collection of Quran translations
           </p>
+          {total > 0 && (
+            <p className="text-[#453142]/60 text-sm mt-2">
+              {total} ebook{total !== 1 ? 's' : ''} available
+            </p>
+          )}
         </motion.div>
 
         {/* Search */}
@@ -89,7 +117,10 @@ export default function EBooksPage() {
               <input
                 type="text"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
                 placeholder="Search ebooks..."
                 className="w-full pl-10 pr-4 py-2 border border-[#453142]/20 rounded-md focus:ring-2 focus:ring-[#453142] focus:border-transparent"
               />
@@ -97,165 +128,253 @@ export default function EBooksPage() {
           </CardContent>
         </Card>
 
-        {/* eBooks Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredEbooks.map((book, index) => (
-            <motion.div
-              key={book.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-              whileHover={{ y: -8 }}
-            >
-              <Card className="group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-white">
-                {/* Animated Book Cover using basic CSS 3D for "opening" effect */}
-                <div
-                  className="relative aspect-[3/4] bg-gradient-to-br from-[#453142] to-[#6e4d66] flex items-center justify-center cursor-pointer perspective-[800px]"
-                  onClick={() => setSelectedEbook(book)}
-                  onMouseEnter={() => setHoveredBookId(book.id)}
-                  onMouseLeave={() => setHoveredBookId(null)}
-                  style={{ minHeight: '0px' }}
-                >
-                  {book.coverImage ? (
-                    <div
-                      className={`relative w-full h-full transition-transform duration-500 ease-in-out`}
-                      style={{
-                        transformStyle: "preserve-3d",
-                        transform:
-                          hoveredBookId === book.id
-                            ? "rotateY(-36deg) scale(1.06)" // 36deg is ~1/5th of 180, looks like a flipped book being held slightly open
-                            : "none"
-                      }}
-                    >
-                      {/* Cover (front face) */}
-                      <img
-                        src={book.coverImage}
-                        alt={book.title}
-                        className="object-cover w-full h-full rounded-md"
-                        style={{
-                          backfaceVisibility: 'hidden',
-                          boxShadow: hoveredBookId === book.id ? '2px 6px 32px #0000002a' : 'none'
-                        }}
-                      />
-                      {/* Page shadow effect when hovered (simulating book thickness/paper) */}
-                      <div
-                        className="absolute right-0 top-0 h-full w-2 rounded-r-md"
-                        style={{
-                          opacity: hoveredBookId === book.id ? 0.18 : 0,
-                          background: 'linear-gradient(to right,rgba(255,255,255,0),#b8a4bb 70%)',
-                          transition: 'opacity 0.2s'
-                        }}
-                      />
-                      {/* "Inner pages" simulation when hovered */}
-                      {hoveredBookId === book.id && (
-                        <div
-                          className="absolute left-1 top-2 bottom-2 w-[7%] rounded-md"
-                          style={{
-                            background: 'linear-gradient(120deg,#fff,#f6f2f8 80%)',
-                            boxShadow: '0px 0px 10px #f8ebfc84',
-                            opacity: 0.8,
-                          }}
-                        />
-                      )}
-                    </div>
-                  ) : (
-                    <div
-                      className={`relative w-full h-full flex items-center justify-center transition-transform duration-500 ease-in-out`}
-                      style={{
-                        transformStyle: "preserve-3d",
-                        transform:
-                          hoveredBookId === book.id
-                            ? "rotateY(-36deg) scale(1.06)"
-                            : "none"
-                      }}
-                    >
-                      <BookOpen className="w-24 h-24 text-[#faf9f7]/50" />
-                      {/* Page shadow and inner pages for icon as well */}
-                      <div
-                        className="absolute right-0 top-0 h-full w-2 rounded-r-md"
-                        style={{
-                          opacity: hoveredBookId === book.id ? 0.18 : 0,
-                          background: 'linear-gradient(to right,rgba(255,255,255,0),#b8a4bb 70%)',
-                          transition: 'opacity 0.2s'
-                        }}
-                      />
-                      {hoveredBookId === book.id && (
-                        <div
-                          className="absolute left-1 top-2 bottom-2 w-[7%] rounded-md"
-                          style={{
-                            background: 'linear-gradient(120deg,#fff,#f6f2f8 80%)',
-                            boxShadow: '0px 0px 10px #f8ebfc84',
-                            opacity: 0.8,
-                          }}
-                        />
-                      )}
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center pointer-events-none z-10">
-                    <div className="w-16 h-16 bg-[#faf9f7] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <BookOpen className="w-8 h-8 text-[#453142]" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Book Info */}
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-[#453142] line-clamp-2 mb-2">
-                    {book.title}
-                  </h3>
-                  <p className="text-sm text-[#453142]/70 line-clamp-2">
-                    {book.description}
-                  </p>
-                  {book.pages && (
-                    <p className="text-xs text-[#453142]/50 mt-2">
-                      {book.pages} pages
-                    </p>
-                  )}
-
-                  <div className="flex gap-2 mt-4">
-                    <Button
-                      variant="default"
-                      size="sm"
-                      className="flex-1 bg-[#453142] text-white hover:bg-[#2d1c26]"
-                      onClick={() => setSelectedEbook(book)}
-                    >
-                      <BookOpen className="w-4 h-4 mr-2" />
-                      Read
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 border-[#453142]/30 text-[#453142] hover:bg-[#453142]/5"
-                      onClick={() => handleDownload(book.filename)}
-                      type="button"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* No Results */}
-        {filteredEbooks.length === 0 && (
+        {/* Loading State */}
+        {loading ? (
           <div className="text-center py-12">
-            <p className="text-[#453142]/70 text-lg">
-              No ebooks found. Try adjusting your search.
-            </p>
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#453142] border-r-transparent mb-4"></div>
+            <p className="text-[#453142]">Loading ebooks...</p>
           </div>
+        ) : (
+          <>
+            {/* eBooks Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {ebooks.map((book, index) => (
+                <motion.div
+                  key={book.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  whileHover={{ y: -8 }}
+                >
+                  <Card className="group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-white">
+                    {/* Enhanced 3D Book Cover with Opening Animation */}
+                    <div
+                      className="relative aspect-[3/4] bg-gradient-to-br from-[#453142] to-[#6e4d66] flex items-center justify-center cursor-pointer overflow-hidden"
+                      style={{ perspective: '1200px' }}
+                      onClick={() => setSelectedEbook(book)}
+                      onMouseEnter={() => setHoveredBookId(book.id)}
+                      onMouseLeave={() => setHoveredBookId(null)}
+                    >
+                      {book.coverImage ? (
+                        <div className="relative w-full h-full">
+                          {/* Book Cover with 3D Transform */}
+                          <div
+                            className="absolute inset-0 transition-all duration-700 ease-out"
+                            style={{
+                              transformStyle: 'preserve-3d',
+                              transform:
+                                hoveredBookId === book.id
+                                  ? 'perspective(1200px) rotateY(-45deg) translateX(8%) scale(1.05)'
+                                  : 'none',
+                              transformOrigin: 'left center',
+                            }}
+                          >
+                            {/* Front Cover */}
+                            <Image
+                              src={book.coverImage}
+                              alt={book.title}
+                              fill
+                              className="object-cover rounded-md shadow-2xl"
+                              style={{
+                                backfaceVisibility: 'hidden',
+                                boxShadow:
+                                  hoveredBookId === book.id
+                                    ? '-8px 8px 24px rgba(0,0,0,0.3)'
+                                    : 'none',
+                              }}
+                            />
+
+                            {/* Book Spine (visible when opened) */}
+                            {hoveredBookId === book.id && (
+                              <div
+                                className="absolute left-0 top-0 h-full w-3 bg-gradient-to-r from-[#2d1c26] to-[#453142] rounded-l-sm"
+                                style={{
+                                  transform: 'rotateY(90deg) translateZ(2px)',
+                                  transformOrigin: 'left',
+                                  boxShadow: 'inset -2px 0 5px rgba(0,0,0,0.5)',
+                                }}
+                              />
+                            )}
+
+                            {/* Inner Pages Effect */}
+                            {hoveredBookId === book.id && (
+                              <>
+                                {/* Multiple page layers for depth */}
+                                <div
+                                  className="absolute right-0 top-1 bottom-1 w-[95%] bg-gradient-to-l from-white via-[#faf9f7] to-[#f6f2f8] rounded-r-md"
+                                  style={{
+                                    transform: 'translateZ(-2px) rotateY(-3deg)',
+                                    boxShadow: 'inset 3px 0 8px rgba(69,49,66,0.15)',
+                                    opacity: 0.95,
+                                  }}
+                                />
+                                <div
+                                  className="absolute right-0 top-2 bottom-2 w-[93%] bg-gradient-to-l from-[#fefefe] to-[#f8f6f9] rounded-r-sm"
+                                  style={{
+                                    transform: 'translateZ(-4px) rotateY(-2deg)',
+                                    boxShadow: 'inset 2px 0 6px rgba(69,49,66,0.1)',
+                                    opacity: 0.9,
+                                  }}
+                                />
+                                <div
+                                  className="absolute right-0 top-3 bottom-3 w-[91%] bg-white rounded-r-sm"
+                                  style={{
+                                    transform: 'translateZ(-6px) rotateY(-1deg)',
+                                    boxShadow: 'inset 1px 0 4px rgba(69,49,66,0.08)',
+                                    opacity: 0.85,
+                                  }}
+                                />
+                              </>
+                            )}
+                          </div>
+                          {/* Overlay with icon */}
+                          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center pointer-events-none z-10">
+                            <div className="w-16 h-16 bg-[#faf9f7] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                              <BookOpen className="w-8 h-8 text-[#453142]" />
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        // Fallback for books without cover image
+                        <div className="relative w-full h-full">
+                          <div
+                            className="relative w-full h-full flex items-center justify-center transition-all duration-700 ease-out"
+                            style={{
+                              transformStyle: 'preserve-3d',
+                              transform:
+                                hoveredBookId === book.id
+                                  ? 'perspective(1200px) rotateY(-45deg) translateX(8%) scale(1.05)'
+                                  : 'none',
+                              transformOrigin: 'left center',
+                            }}
+                          >
+                            <BookOpen className="w-24 h-24 text-[#faf9f7]/50" />
+                            {/* Spine for icon version */}
+                            {hoveredBookId === book.id && (
+                              <div
+                                className="absolute left-0 top-0 h-full w-3 bg-gradient-to-r from-[#2d1c26] to-[#453142] rounded-l-sm"
+                                style={{
+                                  transform: 'rotateY(90deg) translateZ(2px)',
+                                  transformOrigin: 'left',
+                                }}
+                              />
+                            )}
+                            {/* Inner pages for icon version */}
+                            {hoveredBookId === book.id && (
+                              <>
+                                <div
+                                  className="absolute right-0 top-1 bottom-1 w-[95%] bg-gradient-to-l from-white to-[#f6f2f8] rounded-r-md"
+                                  style={{
+                                    transform: 'translateZ(-2px) rotateY(-3deg)',
+                                    opacity: 0.95,
+                                  }}
+                                />
+                                <div
+                                  className="absolute right-0 top-2 bottom-2 w-[93%] bg-white rounded-r-sm"
+                                  style={{
+                                    transform: 'translateZ(-4px) rotateY(-2deg)',
+                                    opacity: 0.9,
+                                  }}
+                                />
+                              </>
+                            )}
+                          </div>
+                          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center pointer-events-none z-10">
+                            <div className="w-16 h-16 bg-[#faf9f7] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                              <BookOpen className="w-8 h-8 text-[#453142]" />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Book Info (keep existing code) */}
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold text-[#453142] line-clamp-2 mb-2">
+                        {book.title}
+                      </h3>
+                      <p className="text-sm text-[#453142]/70 line-clamp-2">{book.description}</p>
+                      {book.pages && (
+                        <p className="text-xs text-[#453142]/50 mt-2">{book.pages} pages</p>
+                      )}
+
+                      <div className="flex gap-2 mt-4">
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="flex-1 bg-[#453142] text-white hover:bg-[#2d1c26]"
+                          onClick={() => setSelectedEbook(book)}
+                        >
+                          <BookOpen className="w-4 h-4 mr-2" />
+                          Read
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 border-[#453142]/30 text-[#453142] hover:bg-[#453142]/5"
+                          onClick={() => handleDownload(book.filename)}
+                          type="button"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* No Results */}
+            {ebooks.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-[#453142]/70 text-lg">
+                  No ebooks found. {searchTerm ? 'Try adjusting your search.' : ''}
+                </p>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center gap-2 mt-8">
+                <Button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  variant="outline"
+                  className="border-[#453142] text-[#453142]"
+                >
+                  Previous
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={
+                      currentPage === page
+                        ? 'bg-[#453142] text-[#faf9f7]'
+                        : 'bg-white text-[#453142] border border-[#453142]/20'
+                    }
+                  >
+                    {page}
+                  </Button>
+                ))}
+                <Button
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  variant="outline"
+                  className="border-[#453142] text-[#453142]"
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </>
         )}
 
-        {/* Flipbook Modal */}
+        {/* Flipbook Modal - keep existing code */}
         <AnimatePresence>
           {selectedEbook && (
-            <FlipbookModal
-              ebook={selectedEbook}
-              onClose={() => setSelectedEbook(null)}
-              // pass download handler to modal if you want to put download in modal header too
-            />
+            <FlipbookModal ebook={selectedEbook} onClose={() => setSelectedEbook(null)} />
           )}
         </AnimatePresence>
       </div>
@@ -271,7 +390,6 @@ function FlipbookModal({
   ebook: EBook;
   onClose: () => void;
 }) {
-  // Download handler for modal
   const handleDownload = () => {
     const fileUrl = `/pdfs/${ebook.filename}`;
     const link = document.createElement('a');
@@ -336,7 +454,6 @@ function FlipbookModal({
             </button>
           </div>
         </div>
-
         {/* Flipbook Container */}
         <div className="h-[calc(100%-80px)] overflow-hidden">
           <PDFFlipbook filename={ebook.filename} />

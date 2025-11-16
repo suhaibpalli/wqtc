@@ -9,6 +9,7 @@ import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import NoticesSection from "@/components/sections/NoticesSection";
 import ImageGallerySection from "@/components/sections/ImageGallerySection";
 import BlogSection from "@/components/sections/BlogSection";
+import FAQSection from "@/components/sections/FAQSection"; // ✅ Add this import
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
       <CaseStudiesSection />
       {/* <PricingSection /> */}
       <TestimonialsSection />
+      <FAQSection /> {/* ✅ Add FAQ section here - positioned after testimonials and before gallery */}
       <ImageGallerySection />
       <BlogSection />
       <NoticesSection />
