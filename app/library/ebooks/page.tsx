@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Search, X, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import Image from 'next/image'; // Import Next.js Image
+import Image from 'next/image';
 
 // Dynamic import with SSR disabled to avoid DOMMatrix error
 const PDFFlipbook = dynamic(() => import('@/components/flipbook/PDFFlipbook'), {
@@ -139,6 +139,7 @@ export default function EBooksPage() {
             {/* eBooks Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {ebooks.map((book, index) => (
+
                 <motion.div
                   key={book.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -146,141 +147,166 @@ export default function EBooksPage() {
                   transition={{ delay: index * 0.05 }}
                   whileHover={{ y: -8 }}
                 >
-                  <Card className="group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-white">
+                  <Card className="group border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-white overflow-visible rounded-lg">
                     {/* Enhanced 3D Book Cover with Opening Animation */}
                     <div
-                      className="relative aspect-[3/4] bg-gradient-to-br from-[#453142] to-[#6e4d66] flex items-center justify-center cursor-pointer overflow-hidden"
-                      style={{ perspective: '1200px' }}
+                      className="relative aspect-[3/4] bg-white flex items-center justify-center cursor-pointer rounded-t-lg overflow-hidden"
+                      style={{ perspective: '1500px' }}
                       onClick={() => setSelectedEbook(book)}
                       onMouseEnter={() => setHoveredBookId(book.id)}
                       onMouseLeave={() => setHoveredBookId(null)}
                     >
                       {book.coverImage ? (
                         <div className="relative w-full h-full">
-                          {/* Book Cover with 3D Transform */}
+                          {/* Book Cover with 3D Transform - Opens OUTWARD */}
                           <div
                             className="absolute inset-0 transition-all duration-700 ease-out"
                             style={{
                               transformStyle: 'preserve-3d',
                               transform:
                                 hoveredBookId === book.id
-                                  ? 'perspective(1200px) rotateY(-45deg) translateX(8%) scale(1.05)'
-                                  : 'none',
+                                  ? 'rotateY(25deg) translateX(-5%)'
+                                  : 'rotateY(0deg)',
                               transformOrigin: 'left center',
                             }}
                           >
-                            {/* Front Cover */}
-                            <Image
-                              src={book.coverImage}
-                              alt={book.title}
-                              fill
-                              className="object-cover rounded-md shadow-2xl"
+                            {/* Front Cover - Fully opaque */}
+                            <div
+                              className="relative w-full h-full bg-white"
                               style={{
                                 backfaceVisibility: 'hidden',
-                                boxShadow:
-                                  hoveredBookId === book.id
-                                    ? '-8px 8px 24px rgba(0,0,0,0.3)'
-                                    : 'none',
                               }}
-                            />
+                            >
+                              <Image
+                                src={book.coverImage}
+                                alt={book.title}
+                                fill
+                                className="object-cover rounded-md"
+                                style={{
+                                  backfaceVisibility: 'hidden',
+                                }}
+                              />
+                            </div>
 
                             {/* Book Spine (visible when opened) */}
                             {hoveredBookId === book.id && (
                               <div
-                                className="absolute left-0 top-0 h-full w-3 bg-gradient-to-r from-[#2d1c26] to-[#453142] rounded-l-sm"
+                                className="absolute left-0 top-0 h-full w-2 bg-gradient-to-r from-[#2d1c26] to-[#3a2533]"
                                 style={{
-                                  transform: 'rotateY(90deg) translateZ(2px)',
-                                  transformOrigin: 'left',
+                                  transform: 'rotateY(-90deg) translateZ(1px)',
+                                  transformOrigin: 'left center',
                                   boxShadow: 'inset -2px 0 5px rgba(0,0,0,0.5)',
                                 }}
                               />
                             )}
 
-                            {/* Inner Pages Effect */}
+                            {/* Inner Pages Effect - Behind the cover */}
+                            {hoveredBookId === book.id && (
+                              <div
+                                className="absolute inset-0 pointer-events-none"
+                                style={{
+                                  transform: 'translateZ(-8px)',
+                                }}
+                              >
+                                {/* Page Stack 1 - Closest to cover */}
+                                <div
+                                  className="absolute inset-0 bg-gradient-to-r from-[#fefefe] via-[#f8f6f9] to-white border-l-2 border-[#453142]/10"
+                                  style={{
+                                    boxShadow: 'inset 3px 0 8px rgba(69,49,66,0.12)',
+                                  }}
+                                />
+                              </div>
+                            )}
+
+                            {/* Additional page layers */}
                             {hoveredBookId === book.id && (
                               <>
-                                {/* Multiple page layers for depth */}
                                 <div
-                                  className="absolute right-0 top-1 bottom-1 w-[95%] bg-gradient-to-l from-white via-[#faf9f7] to-[#f6f2f8] rounded-r-md"
+                                  className="absolute inset-0 pointer-events-none"
                                   style={{
-                                    transform: 'translateZ(-2px) rotateY(-3deg)',
-                                    boxShadow: 'inset 3px 0 8px rgba(69,49,66,0.15)',
-                                    opacity: 0.95,
+                                    transform: 'translateZ(-16px)',
                                   }}
-                                />
+                                >
+                                  <div
+                                    className="absolute inset-0 bg-gradient-to-r from-white to-[#faf9f7] border-l border-[#453142]/8"
+                                    style={{
+                                      boxShadow: 'inset 2px 0 6px rgba(69,49,66,0.08)',
+                                    }}
+                                  />
+                                </div>
                                 <div
-                                  className="absolute right-0 top-2 bottom-2 w-[93%] bg-gradient-to-l from-[#fefefe] to-[#f8f6f9] rounded-r-sm"
+                                  className="absolute inset-0 pointer-events-none"
                                   style={{
-                                    transform: 'translateZ(-4px) rotateY(-2deg)',
-                                    boxShadow: 'inset 2px 0 6px rgba(69,49,66,0.1)',
-                                    opacity: 0.9,
+                                    transform: 'translateZ(-24px)',
                                   }}
-                                />
-                                <div
-                                  className="absolute right-0 top-3 bottom-3 w-[91%] bg-white rounded-r-sm"
-                                  style={{
-                                    transform: 'translateZ(-6px) rotateY(-1deg)',
-                                    boxShadow: 'inset 1px 0 4px rgba(69,49,66,0.08)',
-                                    opacity: 0.85,
-                                  }}
-                                />
+                                >
+                                  <div className="absolute inset-0 bg-white border-l border-[#453142]/5" />
+                                </div>
                               </>
                             )}
                           </div>
-                          {/* Overlay with icon */}
-                          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center pointer-events-none z-10">
-                            <div className="w-16 h-16 bg-[#faf9f7] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+
+                          {/* Overlay with icon - Reduced opacity so cover shows through */}
+                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center pointer-events-none z-10">
+                            <div className="w-16 h-16 bg-[#faf9f7] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
                               <BookOpen className="w-8 h-8 text-[#453142]" />
                             </div>
                           </div>
                         </div>
                       ) : (
                         // Fallback for books without cover image
-                        <div className="relative w-full h-full">
+                        <div className="relative w-full h-full bg-gradient-to-br from-[#453142] to-[#6e4d66]">
                           <div
                             className="relative w-full h-full flex items-center justify-center transition-all duration-700 ease-out"
                             style={{
                               transformStyle: 'preserve-3d',
                               transform:
                                 hoveredBookId === book.id
-                                  ? 'perspective(1200px) rotateY(-45deg) translateX(8%) scale(1.05)'
-                                  : 'none',
+                                  ? 'rotateY(25deg) translateX(-5%)'
+                                  : 'rotateY(0deg)',
                               transformOrigin: 'left center',
                             }}
                           >
-                            <BookOpen className="w-24 h-24 text-[#faf9f7]/50" />
+                            <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-[#453142] to-[#6e4d66]">
+                              <BookOpen className="w-24 h-24 text-[#faf9f7]/50 z-10" />
+                            </div>
+
                             {/* Spine for icon version */}
                             {hoveredBookId === book.id && (
                               <div
-                                className="absolute left-0 top-0 h-full w-3 bg-gradient-to-r from-[#2d1c26] to-[#453142] rounded-l-sm"
+                                className="absolute left-0 top-0 h-full w-2 bg-gradient-to-r from-[#2d1c26] to-[#3a2533]"
                                 style={{
-                                  transform: 'rotateY(90deg) translateZ(2px)',
-                                  transformOrigin: 'left',
+                                  transform: 'rotateY(-90deg) translateZ(1px)',
+                                  transformOrigin: 'left center',
+                                  boxShadow: 'inset -2px 0 5px rgba(0,0,0,0.5)',
                                 }}
                               />
                             )}
+
                             {/* Inner pages for icon version */}
                             {hoveredBookId === book.id && (
                               <>
                                 <div
-                                  className="absolute right-0 top-1 bottom-1 w-[95%] bg-gradient-to-l from-white to-[#f6f2f8] rounded-r-md"
+                                  className="absolute inset-0 pointer-events-none"
                                   style={{
-                                    transform: 'translateZ(-2px) rotateY(-3deg)',
-                                    opacity: 0.95,
+                                    transform: 'translateZ(-8px)',
                                   }}
-                                />
+                                >
+                                  <div className="absolute inset-0 bg-gradient-to-r from-white to-[#f6f2f8] border-l-2 border-[#453142]/10" />
+                                </div>
                                 <div
-                                  className="absolute right-0 top-2 bottom-2 w-[93%] bg-white rounded-r-sm"
+                                  className="absolute inset-0 pointer-events-none"
                                   style={{
-                                    transform: 'translateZ(-4px) rotateY(-2deg)',
-                                    opacity: 0.9,
+                                    transform: 'translateZ(-16px)',
                                   }}
-                                />
+                                >
+                                  <div className="absolute inset-0 bg-white border-l border-[#453142]/5" />
+                                </div>
                               </>
                             )}
                           </div>
-                          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center pointer-events-none z-10">
-                            <div className="w-16 h-16 bg-[#faf9f7] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center pointer-events-none z-10">
+                            <div className="w-16 h-16 bg-[#faf9f7] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
                               <BookOpen className="w-8 h-8 text-[#453142]" />
                             </div>
                           </div>
@@ -288,12 +314,14 @@ export default function EBooksPage() {
                       )}
                     </div>
 
-                    {/* Book Info (keep existing code) */}
+                    {/* Book Info */}
                     <CardContent className="p-4">
                       <h3 className="font-semibold text-[#453142] line-clamp-2 mb-2">
                         {book.title}
                       </h3>
-                      <p className="text-sm text-[#453142]/70 line-clamp-2">{book.description}</p>
+                      {book.description && (
+                        <p className="text-sm text-[#453142]/70 line-clamp-2">{book.description}</p>
+                      )}
                       {book.pages && (
                         <p className="text-xs text-[#453142]/50 mt-2">{book.pages} pages</p>
                       )}
