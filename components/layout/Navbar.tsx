@@ -5,20 +5,28 @@ import { useState } from "react"
 import { Menu, X, Facebook, Instagram, Youtube, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-// Navigation structure with submenus
+// 1. Import DropdownMenu components
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu"
+
+// About dropdown items as described
+const aboutMenuItems = [
+  { label: 'Our Mentor', href: '/about/our-mentor' },
+  { label: 'Why Understand Quran', href: '/about/why-understand-quran' },
+  { label: 'Vision & Mission', href: '/about/vision-mission' },
+]
+
+// Rest of navigation - exclude About from navLinks, which is handled by custom dropdown
 const navLinks = [
   {
     href: "/",
     label: "Home",
   },
-  {
-    label: "About Us",
-    submenu: [
-      { href: "/about/our-mentor", label: "Our Mentor" },
-      { href: "/about/why-understand-quran", label: "Why Understand Qur'an" },
-      { href: "/about/vision-mission", label: "Our Vision and Mission" },
-    ],
-  },
+  // 'About' handled separately
   {
     label: "Translations",
     submenu: [
@@ -69,6 +77,7 @@ const socialLinks = [
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false)
 
   // Switch to specified purple background, make text bold, and increase font size
   return (
@@ -150,6 +159,40 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-6">
+            {/* ABOUT Dropdown with new custom DropdownMenu */}
+            <DropdownMenu
+              open={aboutDropdownOpen}
+              onOpenChange={setAboutDropdownOpen}
+            >
+              <DropdownMenuTrigger
+                className="text-lg text-[#e0def4] font-semibold hover:text-[#cdabff] transition-colors flex items-center gap-1 bg-transparent border-none outline-none cursor-pointer"
+                tabIndex={0}
+                onMouseEnter={() => setAboutDropdownOpen(true)}
+                onMouseLeave={() => setAboutDropdownOpen(false)}
+                onFocus={() => setAboutDropdownOpen(true)}
+                onBlur={() => setAboutDropdownOpen(false)}
+              >
+                About Us
+                <ChevronDown className="h-5 w-5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="bg-[#57355e] border border-[#e0def4]/20 rounded-lg mt-2 shadow-lg w-64 py-2"
+                onMouseEnter={() => setAboutDropdownOpen(true)}
+                onMouseLeave={() => setAboutDropdownOpen(false)}
+              >
+                {aboutMenuItems.map((item) => (
+                  <DropdownMenuItem
+                    key={item.href}
+                    asChild
+                    className="px-5 py-3 text-base text-[#e0def4] hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors cursor-pointer"
+                  >
+                    <Link href={item.href}>{item.label}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Other navigation items */}
             {navLinks.map((link) =>
               link.submenu ? (
                 // Dropdown Menu
@@ -236,6 +279,38 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden mt-4 pb-4 space-y-3 border-t border-[#57355e] pt-4 bg-[#57355e] rounded-xl shadow-lg">
+            {/* About dropdown in mobile, as collapsible */}
+            <div className="space-y-2">
+              <button
+                onClick={() =>
+                  setOpenDropdown(openDropdown === 'About Us' ? null : 'About Us')
+                }
+                className="w-full flex items-center justify-between py-3 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-left text-lg text-[#e0def4]"
+              >
+                About Us
+                <ChevronDown
+                  className={`h-5 w-5 text-[#e0def4] transition-transform ${
+                    openDropdown === 'About Us' ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {/* Mobile About Submenu */}
+              {openDropdown === 'About Us' && (
+                <div className="pl-4 space-y-1">
+                  {aboutMenuItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="block py-2 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-base text-[#e0def4]"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* Other mobile nav items */}
             {navLinks.map((link) =>
               link.submenu ? (
                 // Mobile Dropdown
