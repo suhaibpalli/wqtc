@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,12 +12,10 @@ import {
   Phone,
   CheckCircle2,
   Loader2,
-  X,
-  Info,
-  Sparkles,
-  Globe,
+  X
 } from 'lucide-react';
 
+// -- Define class structures (same as before)
 type ClassSchedule = {
   id: string;
   language: string;
@@ -55,7 +53,7 @@ const palette = [
   "#7e5e77", // accent dark
 ];
 
-// Use new color way (ignore .color):
+// Color helpers
 function getCardBgByType(type: string) {
   if (type === "Ladies") return "bg-[#e5e0e8]";
   if (type === "Gents") return "bg-[#faf9f7]";
@@ -81,92 +79,383 @@ function getBorderColor(type: string) {
   return "border-[#ada2b4]";
 }
 
+// Classes -- (use as-is)
 const classes: ClassSchedule[] = [
-  // --- LADIES (from attached image 1)
-  { id: 'tamil-1', language: 'Tamil', days: ['Mon','Tue','Wed','Thu'], timeFrom:'06:00', timeTo:'07:00', contactNumber:'+91 9941276649', type:'Ladies', color:'', timezone:'IST' },
-  { id: 'tamil-2', language: 'Tamil', days: ['Mon','Tue','Wed','Thu'], timeFrom:'11:30', timeTo:'12:30', contactNumber:'+91 9941276649', type:'Ladies', color:'', timezone:'IST' },
-  { id: 'tamil-3', language: 'Tamil', days: ['Mon','Tue','Wed','Thu'], timeFrom:'15:00', timeTo:'16:00', contactNumber:'+91 9941276649', type:'Ladies', color:'', timezone:'IST' },
-  { id: 'tamil-4', language: 'Tamil', days: ['Mon','Tue','Wed','Thu'], timeFrom:'19:00', timeTo:'20:00', contactNumber:'+91 9941276649', type:'Ladies', color:'', timezone:'IST' },
-  { id: 'engurdu-1', language: 'English & Urdu', days: ['Mon','Tue','Wed','Thu'], timeFrom:'06:00', timeTo:'07:00', contactNumber:'+91 98842 22484', type:'Ladies', color:'', timezone:'IST' },
-  { id: 'engurdu-2', language: 'English & Urdu', days: ['Mon','Tue','Wed','Thu'], timeFrom:'11:30', timeTo:'12:20', contactNumber:'+91 98842 22484', type:'Ladies', color:'', timezone:'IST' },
-  { id: 'eng-us', language:'English (U.S)', days:['Tue','Wed','Thu','Fri'], timeFrom:'07:45', timeTo:'08:30', contactNumber:'+91 98401 32100', type:'Ladies', color:'', timezone:'IST' },
-  { id:'eng-aus',language:'English (Australia)',days:['Sat','Sun'],timeFrom:'06:30',timeTo:'07:30',contactNumber:'+91 94444 33969',type:'Ladies',color:'',timezone:'IST'},
-  // --- UPCOMING (from attached image 1)
-  { id:'up-urdu-eng',language:'Urdu & English',days:['Mon','Tue','Wed','Thu'],timeFrom:'15:00',timeTo:'15:50',contactNumber:'+91 98414 09389',type:'Ladies',color:'',timezone:'IST'},
-  { id:'up-eng',language:'English',days:['Mon','Tue','Wed','Thu'],timeFrom:'19:00',timeTo:'19:50',contactNumber:'+91 98400 59455',type:'Ladies',color:'',timezone:'IST'},
-  // --- FAMILY / GENTS (from attached image 2)
-  { id:'fam-01',language:'English & Urdu',days:['Mon','Tue','Wed','Thu'],timeFrom:'21:15',timeTo:'22:00',contactNumber:'+91 94449 18125',type:'Family',color:'',timezone:'IST'},
-  { id:'fam-02',language:'English & Urdu (USA)',days:['Mon','Tue','Wed','Thu','Fri'],timeFrom:'08:15',timeTo:'09:00',contactNumber:'+1 847 749 6940',type:'Family',color:'',timezone:'IST'},
-  { id:'fam-03',language:'English & Urdu (AUS)',days:['Mon','Tue','Wed','Thu','Fri'],timeFrom:'15:15',timeTo:'16:15',contactNumber:'+61 406 842 137',type:'Family',color:'',timezone:'IST'},
-  { id:'fam-04',language:'English & Urdu (UK)',days:['Sat','Sun'],timeFrom:'23:15',timeTo:'00:05',contactNumber:'+44 777 669 6288',type:'Family',color:'',timezone:'IST'},
-  { id:'fam-05',language:'English & Urdu',days:['Sun'],timeFrom:'16:00',timeTo:'17:00',contactNumber:'+91 94449 18125',type:'Family',color:'',timezone:'IST'},
-  // GENTS
-  { id:'gents-05',language:'English & Urdu',days:['Mon','Tue','Wed','Thu','Fri'],timeFrom:'06:40',timeTo:'07:30',contactNumber:'+91 97910 13510',type:'Gents',color:'',timezone:'IST'},
-  { id:'gents-06-1',language:'English & Urdu',days:['Mon','Tue','Wed','Thu','Fri'],timeFrom:'06:30',timeTo:'07:15',contactNumber:'+91 98843 04539',type:'Gents',color:'',timezone:'IST'},
-  { id:'gents-06-2',language:'English & Urdu',days:['Mon','Tue','Wed','Thu','Fri'],timeFrom:'06:30',timeTo:'07:15',contactNumber:'+91 98400 61112',type:'Gents',color:'',timezone:'IST'},
-  { id:'gents-06-3',language:'English & Urdu',days:['Mon','Tue','Wed','Thu','Fri'],timeFrom:'06:30',timeTo:'07:15',contactNumber:'+91 98410 63322',type:'Gents',color:'',timezone:'IST'},
-  { id:'gents-07',language:'English & Tamil',days:['Mon','Tue','Wed','Thu','Fri'],timeFrom:'06:40',timeTo:'07:30',contactNumber:'+91 98403 58907',type:'Gents',color:'',timezone:'IST'},
-  // Add other rows (Only Tamil, Only Urdu etc. as needed)
+  // -- LADIES ONGOING CLASSES (Mon-Thu, or special days)
+  {
+    id: 'ladies-tamil-1',
+    language: 'Tamil',
+    days: ['Mon', 'Tue', 'Wed', 'Thu'],
+    timeFrom: '06:00',
+    timeTo: '07:00',
+    contactNumber: '+91 99412 76649',
+    type: 'Ladies',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'ladies-tamil-2',
+    language: 'Tamil',
+    days: ['Mon', 'Tue', 'Wed', 'Thu'],
+    timeFrom: '11:30',
+    timeTo: '12:30',
+    contactNumber: '+91 99412 76649',
+    type: 'Ladies',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'ladies-tamil-3',
+    language: 'Tamil',
+    days: ['Mon', 'Tue', 'Wed', 'Thu'],
+    timeFrom: '15:00',
+    timeTo: '16:00',
+    contactNumber: '+91 99412 76649',
+    type: 'Ladies',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'ladies-tamil-4',
+    language: 'Tamil',
+    days: ['Mon', 'Tue', 'Wed', 'Thu'],
+    timeFrom: '19:00',
+    timeTo: '20:00',
+    contactNumber: '+91 99412 76649',
+    type: 'Ladies',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'ladies-eng-urdu-1',
+    language: 'English & Urdu',
+    days: ['Mon', 'Tue', 'Wed', 'Thu'],
+    timeFrom: '06:00',
+    timeTo: '07:00',
+    contactNumber: '+91 98842 22484',
+    type: 'Ladies',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'ladies-eng-urdu-2',
+    language: 'English & Urdu',
+    days: ['Mon', 'Tue', 'Wed', 'Thu'],
+    timeFrom: '11:30',
+    timeTo: '12:20',
+    contactNumber: '+91 98842 22484',
+    type: 'Ladies',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'ladies-eng-us',
+    language: 'English (US)',
+    days: ['Tue', 'Wed', 'Thu', 'Fri'],
+    timeFrom: '07:45',
+    timeTo: '08:30',
+    contactNumber: '+91 98401 32100',
+    type: 'Ladies',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'ladies-eng-aus',
+    language: 'English (Australia)',
+    days: ['Sat', 'Sun'],
+    timeFrom: '06:30',
+    timeTo: '07:30',
+    contactNumber: '+91 94444 33969',
+    type: 'Ladies',
+    color: '',
+    timezone: 'IST',
+  },
+  // -- LADIES UPCOMING CLASSES (Mon-Thu)
+  {
+    id: 'ladies-upcoming-urdu-eng',
+    language: 'Urdu and English',
+    days: ['Mon', 'Tue', 'Wed', 'Thu'],
+    timeFrom: '15:00',
+    timeTo: '15:50',
+    contactNumber: '+91 98414 09389',
+    type: 'Ladies',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'ladies-upcoming-eng',
+    language: 'English',
+    days: ['Mon', 'Tue', 'Wed', 'Thu'],
+    timeFrom: '19:00',
+    timeTo: '19:50',
+    contactNumber: '+91 98400 59455',
+    type: 'Ladies',
+    color: '',
+    timezone: 'IST',
+  },
+  // -- FAMILY CLASSES
+  {
+    id: 'family-01',
+    language: 'English & Urdu',
+    days: ['Mon', 'Tue', 'Wed', 'Thu'],
+    timeFrom: '21:15',
+    timeTo: '22:00',
+    contactNumber: '+91 94449 18125',
+    type: 'Family',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'family-02',
+    language: 'English & Urdu (USA)',
+    days: ['Mon', 'Tue', 'Wed', 'Thu'],
+    timeFrom: '08:15',
+    timeTo: '09:00',
+    contactNumber: '+1 847 749 6940',
+    type: 'Family',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'family-03',
+    language: 'English & Urdu (AUS)',
+    days: ['Mon', 'Tue', 'Wed'],
+    timeFrom: '15:15',
+    timeTo: '16:15',
+    contactNumber: '+61 406 842 137',
+    type: 'Family',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'family-04',
+    language: 'English & Urdu (UK)',
+    days: ['Thu'],
+    timeFrom: '23:15',
+    timeTo: '00:05',
+    contactNumber: '+44 777 669 6288',
+    type: 'Family',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'family-05',
+    language: 'English & Urdu',
+    days: ['Sat', 'Sun'],
+    timeFrom: '16:00',
+    timeTo: '17:00',
+    contactNumber: '+91 94449 18125',
+    type: 'Family',
+    color: '',
+    timezone: 'IST',
+  },
+  // -- GENTS CLASSES
+  {
+    id: 'gents-05',
+    language: 'English & Urdu',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    timeFrom: '06:40',
+    timeTo: '07:30',
+    contactNumber: '+91 97910 13510',
+    type: 'Gents',
+    color: '',
+    timezone: 'IST',
+  },
+  // "Class 6" is three classes/contacts at same time, so separate entries
+  {
+    id: 'gents-06-1',
+    language: 'English & Urdu',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    timeFrom: '06:30',
+    timeTo: '07:15',
+    contactNumber: '+91 98843 04539',
+    type: 'Gents',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'gents-06-2',
+    language: 'English & Urdu',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    timeFrom: '06:30',
+    timeTo: '07:15',
+    contactNumber: '+91 98400 61112',
+    type: 'Gents',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'gents-06-3',
+    language: 'English & Urdu',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    timeFrom: '06:30',
+    timeTo: '07:15',
+    contactNumber: '+91 98410 63322',
+    type: 'Gents',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'gents-07',
+    language: 'English & Tamil',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    timeFrom: '06:40',
+    timeTo: '07:30',
+    contactNumber: '+91 98403 58907',
+    type: 'Gents',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'gents-08',
+    language: 'Only Tamil',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    timeFrom: '21:00',
+    timeTo: '21:45',
+    contactNumber: 'New class will start inshaAllah immediately after Ramzan 2024',
+    type: 'Gents',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'gents-09',
+    language: 'Only Tamil',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    timeFrom: '06:30',
+    timeTo: '07:30',
+    contactNumber: '+91 86101 66228',
+    type: 'Gents',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'gents-10',
+    language: 'Only Tamil',
+    days: ['Sat', 'Sun'],
+    timeFrom: '08:00',
+    timeTo: '09:00',
+    contactNumber: '',
+    type: 'Gents',
+    color: '',
+    timezone: 'IST',
+  },
+  {
+    id: 'gents-11',
+    language: 'Only Urdu',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    timeFrom: '06:30',
+    timeTo: '07:30',
+    contactNumber: '+91 98410 85443',
+    type: 'Gents',
+    color: '',
+    timezone: 'IST',
+  }
 ];
 
+// Show legend about Fajr note for Gents
+const fajrTimeNote = (
+  <div className="text-sm text-[#453142]/70 text-center mb-3 pt-1">
+    <span className="italic">
+      * Class timing may vary up to 30 minutes depending upon the change of Fajr Prayer time in Chennai.
+    </span>
+  </div>
+);
+
+// Calendar labels
 const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const hourLabels = [
-  '06:00','06:30','07:00','07:15','07:30','07:45','08:00','08:15','08:30',
-  '11:30','12:20','12:30','15:00','15:15','15:50','16:00','16:15','16:30',
-  '19:00','19:50','20:00','21:15','22:00','23:15','00:05'
-];
 
-// Find all unique start times
-const uniqueTimes = Array.from(new Set(classes.map(c => c.timeFrom))).sort();
-
-// Minimal calendar grid (with key fix, color, and accessibility enhancements)
+/**
+ * WeeklyCalendar (UPDATED)
+ * - aggregates classes by day+time
+ * - renders multiple class entries inside a cell
+ */
 function WeeklyCalendar({ classes, onClassClick }: { classes: ClassSchedule[], onClassClick: (c: ClassSchedule) => void }) {
+  // unique start times sorted
+  const uniqueTimes = useMemo(() => {
+    const times = Array.from(new Set(classes.map(c => c.timeFrom)));
+    times.sort((a, b) => {
+      const [ah, am] = a.split(':').map(Number);
+      const [bh, bm] = b.split(':').map(Number);
+      return ah !== bh ? ah - bh : am - bm;
+    });
+    return times;
+  }, [classes]);
+
+  // scheduleMap: Map<"Day-Time", ClassSchedule[]>
+  const scheduleMap = useMemo(() => {
+    const map: Map<string, ClassSchedule[]> = new Map();
+    classes.forEach(c => {
+      c.days.forEach(d => {
+        const key = `${d}-${c.timeFrom}`;
+        if (!map.has(key)) map.set(key, []);
+        map.get(key)!.push(c);
+      });
+    });
+    return map;
+  }, [classes]);
+
   return (
     <div className="overflow-x-auto my-8">
       <div className="grid grid-cols-8 gap-0 rounded-2xl border border-[#453142]/30 bg-[#faf9f7]">
+        {/* Empty top-left corner */}
         <div className="bg-[#faf9f7]" />
+        {/* Day headers */}
         {dayLabels.map(day => (
           <div key={day} className="font-bold text-[#453142] text-center border-b border-[#453142]/20 py-2 uppercase tracking-wide">
             {day}
           </div>
         ))}
-        {uniqueTimes.map(time =>
-          [
-            <div key={`row-time-${time}`} className="font-mono text-[#453142]/80 text-right border-r border-[#453142]/10 py-2 px-2 bg-[#faf9f7]">
+        {/* Rows for each time */}
+        {uniqueTimes.map(time => (
+          <React.Fragment key={time}>
+            {/* Time column */}
+            <div className="font-mono text-[#453142]/80 text-right border-r border-[#453142]/10 py-2 px-2 bg-[#faf9f7]">
               {time}
-            </div>,
-            ...dayLabels.map(day => {
-              const found = classes.find(c => c.days.includes(day) && c.timeFrom === time);
+            </div>
+            {/* Day cells for this time */}
+            {dayLabels.map(day => {
+              const key = `${day}-${time}`;
+              const list = scheduleMap.get(key) || [];
+              if (list.length === 0) {
+                return (
+                  <div
+                    key={key}
+                    className="border border-[#453142]/10 min-h-[58px] cursor-default flex items-center justify-center transition-all duration-200 text-sm px-1 bg-[#faf9f7] text-[#453142]/20"
+                    title="No class"
+                    aria-disabled="true"
+                  >
+                    {/* empty */}
+                  </div>
+                );
+              }
+              // If multiple classes exist, render stacked small buttons
               return (
                 <div
-                  key={`${day}-${time}`}
-                  className={`border border-[#453142]/10 min-h-[50px] cursor-pointer flex items-center justify-center transition-all duration-200 text-sm px-1
-                    ${found ? 
-                      `${getCalendarCellColor(found.type)} font-bold shadow-md hover:outline-2 hover:outline-[#7e5e77]`
-                      : 'bg-[#faf9f7] text-[#453142]/15 hover:bg-[#e5e0e8]'
-                    }
-                  `}
-                  onClick={() => found && onClassClick(found)}
-                  title={found ? `${found.language} (${found.type})` : ''}
-                  tabIndex={found ? 0 : -1}
-                  aria-disabled={!found}
-                  aria-label={found ? `Register: ${found.language} ${found.type} ${day} at ${time}` : undefined}
-                  role="button"
-                  onKeyDown={e => {
-                    if (found && (e.key === 'Enter' || e.key === ' ')) onClassClick(found);
-                  }}
+                  key={key}
+                  className="border border-[#453142]/10 min-h-[58px] px-2 py-2 flex flex-col gap-1 items-stretch"
+                  title={list.map(i => `${i.language} (${i.type})`).join(' • ')}
                 >
-                  {found &&
-                    <div className="flex flex-col items-center gap-0 w-full">
-                      <span className="text-xs">{found.language}</span>
-                      <span className="text-[10px] font-normal">{found.type}</span>
-                    </div>
-                  }
+                  {list.map(item => (
+                    <button
+                      key={item.id}
+                      onClick={() => onClassClick(item)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') onClassClick(item);
+                      }}
+                      className={`w-full text-left rounded-lg px-2 py-1 text-xs font-semibold transition transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-offset-1 ${getCalendarCellColor(item.type)} ${list.length > 1 ? 'shadow-sm' : 'shadow-md'}`}
+                      aria-label={`Register ${item.language} ${item.type} at ${time} on ${day}`}
+                    >
+                      <div className="flex justify-between items-center gap-2">
+                        <span className="truncate">{item.language}</span>
+                        <span className="text-[10px] opacity-90">{item.type}</span>
+                      </div>
+                    </button>
+                  ))}
                 </div>
-              )
-            }),
-          ]
-        )}
+              );
+            })}
+          </React.Fragment>
+        ))}
       </div>
       <p className="text-xs mt-4 text-[#453142]/50 text-center">Click a block to register for a class.</p>
     </div>
@@ -198,7 +487,6 @@ export default function ClassesPage() {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Basic fetch logic -- replace with your API endpoint
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -232,14 +520,14 @@ export default function ClassesPage() {
       <div className="container mx-auto px-4">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <h1 className="text-4xl font-bold text-[#453142] text-center mt-10 mb-2 tracking-tight">Quran Translation Class Timetable</h1>
-          <p className="text-lg text-[#453142]/70 text-center mb-8">All batches • All genders • All locations</p>
-
+          <p className="text-lg text-[#453142]/70 text-center mb-5">All batches • All genders • All locations</p>
+          {fajrTimeNote}
           {/* Calendar */}
           <WeeklyCalendar classes={classes} onClassClick={handleClassSelect} />
 
           {/* Card list summary */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7 mt-10">
-            {classes.map((classItem, idx) => (
+            {classes.map((classItem) => (
               <Card
                 key={classItem.id}
                 className={`
