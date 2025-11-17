@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
+import {
   Mail,
   Phone,
   MapPin,
@@ -16,44 +16,13 @@ import {
   Youtube,
   MessageCircle,
   CheckCircle2,
-  Loader2
+  Loader2,
 } from 'lucide-react';
 
-const contactInfo = [
-  {
-    icon: Mail,
-    title: 'Email Us',
-    details: 'support@wqtc.org',
-    link: 'mailto:support@wqtc.org',
-    color: 'from-blue-500 to-cyan-500',
-  },
-  {
-    icon: Phone,
-    title: 'Call Us',
-    details: '+91 98765 43210',
-    link: 'tel:+919876543210',
-    color: 'from-green-500 to-emerald-500',
-  },
-  {
-    icon: MapPin,
-    title: 'Visit Us',
-    details: 'Chennai, Tamil Nadu, India',
-    link: '#',
-    color: 'from-purple-500 to-pink-500',
-  },
-  {
-    icon: Clock,
-    title: 'Office Hours',
-    details: 'Mon-Fri: 9AM - 6PM IST',
-    link: '#',
-    color: 'from-orange-500 to-red-500',
-  },
-];
-
 const socialMedia = [
-  { icon: Facebook, name: 'Facebook', link: '#', color: '#1877F2' },
-  { icon: Instagram, name: 'Instagram', link: '#', color: '#E4405F' },
-  { icon: Youtube, name: 'YouTube', link: '#', color: '#FF0000' },
+  { icon: Facebook, name: 'Facebook', link: 'https://www.facebook.com/profile.php?id=100093641951236', color: '#1877F2' },
+  { icon: Instagram, name: 'Instagram', link: 'https://www.instagram.com/wqtc2024', color: '#E4405F' },
+  { icon: Youtube, name: 'YouTube', link: 'https://www.youtube.com/@WQTC-Chennai', color: '#FF0000' },
   { icon: MessageCircle, name: 'WhatsApp', link: '#', color: '#25D366' },
 ];
 
@@ -68,7 +37,7 @@ const faqs = [
   },
   {
     question: 'How do I join classes?',
-    answer: 'Simply fill out the form below and we\'ll send you all the details via email.',
+    answer: "Simply fill out the form below and we'll send you all the details via email.",
   },
   {
     question: 'Are recordings available?',
@@ -92,10 +61,9 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
+    // Placeholder for actual API call, replace with fetch/axios call
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    console.log('Form submitted:', formData);
     setIsSuccess(true);
     setIsSubmitting(false);
 
@@ -126,8 +94,8 @@ export default function ContactPage() {
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-20 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+          <div className="absolute top-20 right-0 w-96 h-96 bg-[#453142]/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#6e4d66]/10 rounded-full blur-3xl" />
         </div>
 
         <div className="container mx-auto px-4">
@@ -136,80 +104,37 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-4xl mx-auto space-y-6"
           >
-            <Badge className="mb-4 bg-[#453142] text-[#faf9f7] px-4 py-2">
-              Get In Touch
-            </Badge>
-            
+            <Badge className="mb-4 bg-[#453142] text-[#faf9f7] px-4 py-2">Get In Touch</Badge>
             <h1 className="text-4xl md:text-6xl font-bold text-[#453142] leading-tight">
-              Let's <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Connect</span>
+              Let's <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6e4d66] to-[#453142]">Connect</span>
             </h1>
-            
             <p className="text-xl text-[#453142]/80 leading-relaxed">
-              Have questions? Want to join our classes? We're here to help you begin your Quranic journey
+              Have questions? Want to join our classes? We're here to help you begin your Quranic journey.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Contact Info Cards */}
-      <section className="py-16 -mt-10">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {contactInfo.map((info, index) => (
-              <motion.a
-                key={index}
-                href={info.link}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -8 }}
-                className="block"
-              >
-                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-6 text-center">
-                    <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-br ${info.color} rounded-2xl flex items-center justify-center`}>
-                      <info.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-[#453142] mb-2">{info.title}</h3>
-                    <p className="text-[#453142]/70 text-sm">{info.details}</p>
-                  </CardContent>
-                </Card>
-              </motion.a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Main Contact Section */}
+      {/* Main Section */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Contact Form */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <Card className="border-0 shadow-xl">
                 <CardContent className="p-8">
                   <div className="mb-6">
                     <h2 className="text-3xl font-bold text-[#453142] mb-2">Send Us a Message</h2>
-                    <p className="text-[#453142]/70">Fill out the form and we'll get back to you within 24 hours</p>
+                    <p className="text-[#453142]/70">Fill out the form and we'll get back to you within 24 hours.</p>
                   </div>
-
                   {isSuccess ? (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="text-center py-12"
-                    >
-                      <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" />
-                      <h3 className="text-2xl font-bold text-green-600 mb-2">Message Sent!</h3>
+                    <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-12">
+                      <CheckCircle2 className="w-16 h-16 text-[#453142] mx-auto mb-4" />
+                      <h3 className="text-2xl font-bold text-[#453142] mb-2">Message Sent!</h3>
                       <p className="text-[#453142]/70">We'll get back to you soon via email.</p>
                     </motion.div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
-                      {/* Name */}
                       <div>
                         <label className="block text-[#453142] font-medium mb-2">Full Name *</label>
                         <input
@@ -223,7 +148,6 @@ export default function ContactPage() {
                         />
                       </div>
 
-                      {/* Email */}
                       <div>
                         <label className="block text-[#453142] font-medium mb-2">Email Address *</label>
                         <input
@@ -237,7 +161,6 @@ export default function ContactPage() {
                         />
                       </div>
 
-                      {/* Phone */}
                       <div>
                         <label className="block text-[#453142] font-medium mb-2">Phone Number</label>
                         <input
@@ -250,7 +173,6 @@ export default function ContactPage() {
                         />
                       </div>
 
-                      {/* Country */}
                       <div>
                         <label className="block text-[#453142] font-medium mb-2">Country *</label>
                         <select
@@ -272,7 +194,6 @@ export default function ContactPage() {
                         </select>
                       </div>
 
-                      {/* Message */}
                       <div>
                         <label className="block text-[#453142] font-medium mb-2">Message</label>
                         <textarea
@@ -285,8 +206,7 @@ export default function ContactPage() {
                         />
                       </div>
 
-                      {/* Join Classes Checkbox */}
-                      <div className="flex items-start gap-3 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                      <div className="flex items-start gap-3 p-4 bg-[#6e4d66]/10 rounded-lg border border-[#6e4d66]/30">
                         <input
                           type="checkbox"
                           name="joinClasses"
@@ -304,11 +224,10 @@ export default function ContactPage() {
                         </label>
                       </div>
 
-                      {/* Submit Button */}
                       <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-gradient-to-r from-[#453142] to-purple-900 hover:from-[#2d1c26] hover:to-purple-800 text-white py-6 text-lg font-semibold shadow-lg"
+                        className="w-full bg-gradient-to-r from-[#453142] to-[#6e4d66] hover:from-[#2d1c26] hover:to-[#453142] text-white py-6 text-lg font-semibold shadow-lg"
                       >
                         {isSubmitting ? (
                           <>
@@ -328,35 +247,58 @@ export default function ContactPage() {
               </Card>
             </motion.div>
 
-            {/* Right Side - FAQs & Social */}
+            {/* Right Side - Social, Contact Info & FAQs */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="space-y-8"
             >
-              {/* Social Media */}
+              {/* Social Media & Contact Info */}
               <Card className="border-0 shadow-lg">
-                <CardContent className="p-6">
-                  <h3 className="text-2xl font-bold text-[#453142] mb-4">Connect With Us</h3>
+                <CardContent className="p-6 space-y-6">
+                  <h3 className="text-2xl font-bold text-[#453142]">Connect With Us</h3>
                   <p className="text-[#453142]/70 mb-6">Follow us on social media for updates, tips, and inspiration</p>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    {socialMedia.map((social, index) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    {socialMedia.map((social) => (
                       <motion.a
-                        key={index}
+                        key={social.name}
                         href={social.link}
                         target="_blank"
                         rel="noopener noreferrer"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="flex items-center gap-3 p-4 rounded-lg border border-[#453142]/10 hover:border-[#453142]/30 transition-all"
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg border border-[#453142]/10 hover:border-[#453142]/30 transition-all"
                         style={{ borderLeftColor: social.color, borderLeftWidth: '4px' }}
                       >
                         <social.icon className="h-6 w-6" style={{ color: social.color }} />
                         <span className="font-medium text-[#453142]">{social.name}</span>
                       </motion.a>
                     ))}
+                  </div>
+
+                  {/* Contact Info Block */}
+                  <div className="pt-6 space-y-4">
+                    <div className="flex items-center gap-3 text-[#453142] text-sm">
+                      <Mail className="h-5 w-5" />
+                      <a href="mailto:support@wqtc.org" className="hover:underline">
+                        support@wqtc.org
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-3 text-[#453142] text-sm">
+                      <Phone className="h-5 w-5" />
+                      <a href="tel:+919876543210" className="hover:underline">
+                        +91 98765 43210
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-3 text-[#453142] text-sm">
+                      <MapPin className="h-5 w-5" />
+                      <span>Chennai, Tamil Nadu, India</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[#453142] text-sm">
+                      <Clock className="h-5 w-5" />
+                      <span>Mon-Fri: 9AM - 6PM IST</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -365,7 +307,6 @@ export default function ContactPage() {
               <Card className="border-0 shadow-lg">
                 <CardContent className="p-6">
                   <h3 className="text-2xl font-bold text-[#453142] mb-6">Quick Questions</h3>
-                  
                   <div className="space-y-4">
                     {faqs.map((faq, index) => (
                       <motion.div

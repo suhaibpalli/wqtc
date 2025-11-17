@@ -24,7 +24,7 @@ export default function Home() {
       <TestimonialsSection />
       <FAQSection /> {/* ✅ Add FAQ section here - positioned after testimonials and before gallery */}
       <ImageGallerySection />
-      <BlogSection />
+      {/* <BlogSection /> */}
       <NoticesSection />
     </>
   );

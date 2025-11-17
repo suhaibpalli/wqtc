@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, HelpCircle, Search } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { ChevronDown } from "lucide-react";
 
 interface FAQItem {
   id: number;
@@ -66,152 +63,84 @@ const faqData: FAQItem[] = [
 ];
 
 export default function FAQSection() {
-  const [openId, setOpenId] = useState<number | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const filteredFAQs = faqData.filter((faq) =>
-    faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const toggleFAQ = (id: number) => {
-    setOpenId(openId === id ? null : id);
-  };
+  const [openId, setOpenId] = useState<number | null>(faqData[0]?.id ?? null);
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-[#faf9f7] to-white">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <Badge className="mb-4 bg-[#453142] text-[#faf9f7] px-4 py-1">
-            F.A.Q
-          </Badge>
-          <h2 className="text-3xl md:text-5xl font-bold text-[#453142] mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-[#453142]/70 text-lg max-w-2xl mx-auto">
-            Find answers to common questions about our Quran translation classes and resources
-          </p>
-        </motion.div>
-
-        {/* Search Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="max-w-2xl mx-auto mb-12"
-        >
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#453142]/40" />
-            <Input
-              type="text"
-              placeholder="Search for questions..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 pr-4 py-6 text-base border-[#453142]/20 focus:border-[#453142] focus:ring-[#453142] bg-white shadow-sm"
-            />
+    <section className="w-full bg-[#faf9f7] py-16 md:py-24 border-0">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="w-full flex flex-col md:flex-row gap-16 md:gap-8">
+          {/* Left: Title and description */}
+          <div className="md:w-1/2 flex flex-col justify-center">
+            {/* "F.A.Q" badge */}
+            <span className="inline-block uppercase bg-[#e9e6e3] text-[#453142] text-xs px-3 py-1 rounded font-semibold tracking-wider mb-4" style={{letterSpacing:1}}>
+              F.A.Q
+            </span>
+            <h2 className="text-[2.1rem] md:text-[3rem] font-extrabold text-[#2d2632] leading-tight mb-4">
+              Frequently Asked <br className="hidden md:block" /> Questions
+            </h2>
+            <p className="text-[#877e8c] text-base md:text-lg max-w-md mb-10 md:mb-0">
+              Can’t find the answer? Please contact us and we’ll be happy to help. Browse below for some commonly asked questions about our Quran translation classes and resources.
+            </p>
+            <hr className="mt-8 w-16 border-t-2 border-[#ad99b2]" />
           </div>
-        </motion.div>
-
-        {/* FAQ Accordion */}
-        <div className="max-w-4xl mx-auto space-y-4">
-          {filteredFAQs.length > 0 ? (
-            filteredFAQs.map((faq, index) => (
-              <motion.div
-                key={faq.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <Card className="border-[#453142]/10 hover:border-[#453142]/30 transition-all duration-300 shadow-sm hover:shadow-md bg-white">
-                  <CardContent className="p-0">
-                    <button
-                      onClick={() => toggleFAQ(faq.id)}
-                      className="w-full text-left p-6 flex items-center justify-between gap-4 group"
-                      aria-expanded={openId === faq.id}
+          {/* Right: FAQ Panel */}
+          <div className="md:w-1/2 w-full flex flex-col items-stretch justify-center">
+            <div className="w-full flex flex-col gap-0 border rounded bg-white border-[#e2dde2] shadow-sm">
+              {/* Each FAQ as minimal panel */}
+              {faqData.map((faq, idx) => (
+                <div
+                  key={faq.id}
+                  className={`
+                    ${idx !== 0 ? 'border-t' : ''}
+                    border-[#e2dde2] bg-white 
+                    ${openId === faq.id ? "z-10 relative" : ""}
+                  `}
+                  style={{
+                    boxShadow: openId === faq.id
+                      ? "0 2px 14px 0 rgba(92,62,99,0.08)"
+                      : undefined,
+                  }}
+                >
+                  <button
+                    className={`
+                      flex items-center w-full justify-between px-4 md:px-6 py-3.5 text-left 
+                      font-semibold text-[#2d2632] bg-transparent focus:outline-none transition-colors
+                      ${openId === faq.id
+                        ? "bg-[#f7f2fa]"
+                        : "hover:bg-[#f6f4fa]"
+                      }
+                    `}
+                    aria-expanded={openId === faq.id}
+                    onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
+                    tabIndex={0}
+                  >
+                    <span className="text-base">{faq.question}</span>
+                    <span
+                      className={`ml-4 transition-transform duration-300 ${openId === faq.id ? "rotate-180" : ""}`}
                     >
-                      <div className="flex items-start gap-4 flex-1">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#453142]/10 flex items-center justify-center group-hover:bg-[#453142]/20 transition-colors">
-                          <HelpCircle className="h-5 w-5 text-[#453142]" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-[#453142] group-hover:text-[#6e4d66] transition-colors">
-                            {faq.question}
-                          </h3>
-                          {faq.category && (
-                            <span className="text-xs text-[#453142]/60 mt-1 inline-block">
-                              {faq.category}
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                      <ChevronDown className="w-5 h-5 text-[#9a82a6]" aria-hidden="true"/>
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {openId === faq.id && (
                       <motion.div
-                        animate={{ rotate: openId === faq.id ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="flex-shrink-0"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.20, ease: "easeInOut" }}
+                        className="overflow-hidden"
                       >
-                        <ChevronDown className="h-5 w-5 text-[#453142]/60" />
+                        <div className="px-4 md:px-6 pb-4 text-[#5b4864] text-sm md:text-base leading-relaxed bg-[#f7f2fa] rounded-b">
+                          {faq.answer}
+                        </div>
                       </motion.div>
-                    </button>
-
-                    <AnimatePresence>
-                      {openId === faq.id && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="px-6 pb-6 pl-20">
-                            <p className="text-[#453142]/80 leading-relaxed">
-                              {faq.answer}
-                            </p>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <p className="text-[#453142]/60 text-lg">
-                No questions found matching your search. Try different keywords.
-              </p>
-            </motion.div>
-          )}
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
-        >
-          <p className="text-[#453142]/70 mb-4">
-            Still have questions?
-          </p>
-          <a
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-[#453142] text-[#faf9f7] px-6 py-3 rounded-lg hover:bg-[#5a3f54] transition-colors font-medium shadow-lg hover:shadow-xl"
-          >
-            Contact Us
-          </a>
-        </motion.div>
       </div>
     </section>
   );

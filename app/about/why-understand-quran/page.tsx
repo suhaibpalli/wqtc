@@ -17,42 +17,43 @@ import {
   ArrowRight
 } from 'lucide-react';
 
+// Updated gradients and palette per brand theme
 const reasons = [
   {
     icon: Heart,
     title: 'Strengthen Your Faith',
     description: 'Understanding the Quran deepens your connection with Allah and reinforces your belief through His divine wisdom.',
-    gradient: 'from-rose-500 to-pink-600',
+    gradient: 'from-[#453142] to-[#6e4d66]',
   },
   {
     icon: Brain,
     title: 'Gain True Knowledge',
     description: 'Move beyond mere recitation to comprehend the profound meanings and guidance within every verse.',
-    gradient: 'from-blue-500 to-cyan-600',
+    gradient: 'from-[#6e4d66] to-[#faf9f7]',
   },
   {
     icon: Shield,
     title: 'Find Life Guidance',
     description: 'Discover practical solutions to modern challenges through timeless Quranic wisdom and principles.',
-    gradient: 'from-purple-500 to-indigo-600',
+    gradient: 'from-[#453142] to-[#faf9f7]',
   },
   {
     icon: Star,
     title: 'Fulfill Your Purpose',
     description: 'The Quran was revealed for understanding and reflection, not just melodious recitation.',
-    gradient: 'from-orange-500 to-red-600',
+    gradient: 'from-[#6e4d66] to-[#453142]',
   },
   {
     icon: Lightbulb,
     title: 'Develop Critical Thinking',
     description: 'The Quran encourages reflection, contemplation, and intellectual growth in every verse.',
-    gradient: 'from-green-500 to-emerald-600',
+    gradient: 'from-[#fae7ef] to-[#6e4d66]',
   },
   {
     icon: Target,
     title: 'Achieve Inner Peace',
     description: 'Understanding Allah\'s words brings tranquility, clarity, and purpose to your daily life.',
-    gradient: 'from-teal-500 to-cyan-600',
+    gradient: 'from-[#453142] to-[#faf9f7]',
   },
 ];
 
@@ -110,8 +111,9 @@ export default function WhyUnderstandQuranPage() {
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-20 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+          {/* Updated gradient overlays to theme palette */}
+          <div className="absolute top-20 right-0 w-96 h-96 bg-[#6e4d66]/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#453142]/10 rounded-full blur-3xl" />
         </div>
 
         <div className="container mx-auto px-4">
@@ -120,19 +122,19 @@ export default function WhyUnderstandQuranPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-4xl mx-auto space-y-6"
           >
-            <Badge className="mb-4 bg-[#453142] text-[#faf9f7] px-4 py-2">
+            <Badge className="mb-4 bg-[#453142]/90 text-[#faf9f7] px-4 py-2">
               Our Purpose
             </Badge>
             
             <h1 className="text-4xl md:text-6xl font-bold text-[#453142] leading-tight">
-              Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Understanding</span> the Quran Matters
+              Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6e4d66] to-[#453142]">Understanding</span> the Quran Matters
             </h1>
             
             <p className="text-xl text-[#453142]/80 leading-relaxed">
               The Quran is not just a book to be recited - it's Allah's direct message to guide, transform, and elevate your life. Discover why understanding its meanings is essential for every Muslim.
             </p>
 
-            <Button size="lg" className="bg-[#453142] hover:bg-[#2d1c26] text-white shadow-lg mt-4">
+            <Button size="lg" className="bg-[#453142] hover:bg-[#6e4d66] text-white shadow-lg mt-4 transition-colors">
               Start Your Journey
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -141,7 +143,7 @@ export default function WhyUnderstandQuranPage() {
       </section>
 
       {/* Quranic Verses Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-[#453142] to-purple-900 text-white">
+      <section className="py-16 md:py-24 bg-gradient-to-br from-[#453142] to-[#6e4d66] text-[#faf9f7]">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -152,7 +154,7 @@ export default function WhyUnderstandQuranPage() {
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
               Allah Commands Us to Reflect
             </h2>
-            <p className="text-white/80 text-lg max-w-2xl mx-auto">
+            <p className="text-[#faf9f7]/80 text-lg max-w-2xl mx-auto">
               The Quran itself emphasizes the importance of understanding and contemplation
             </p>
           </motion.div>
@@ -166,11 +168,11 @@ export default function WhyUnderstandQuranPage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full bg-white/10 backdrop-blur-md border-white/20">
+                <Card className="h-full bg-[#faf9f7]/10 backdrop-blur-md border-white/10">
                   <CardContent className="p-6 space-y-4">
                     <p className="text-2xl font-arabic text-right leading-relaxed">{verse.arabic}</p>
-                    <p className="text-white/90 italic text-lg">&ldquo;{verse.translation}&rdquo;</p>
-                    <p className="text-sm text-white/60">{verse.reference}</p>
+                    <p className="text-[#faf9f7]/90 italic text-lg">&ldquo;{verse.translation}&rdquo;</p>
+                    <p className="text-sm text-[#faf9f7]/60">{verse.reference}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -188,7 +190,7 @@ export default function WhyUnderstandQuranPage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <Badge className="mb-4 bg-purple-100 text-purple-700">Key Reasons</Badge>
+            <Badge className="mb-4 bg-[#453142]/10 text-[#453142]">Key Reasons</Badge>
             <h2 className="text-3xl md:text-5xl font-bold text-[#453142] mb-4">
               Transform Your Life Through Understanding
             </h2>
@@ -220,7 +222,7 @@ export default function WhyUnderstandQuranPage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-[#faf9f7] to-white">
+      <section className="py-16 md:py-24 bg-[#faf9f7]">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
             <motion.div
@@ -229,7 +231,7 @@ export default function WhyUnderstandQuranPage() {
               viewport={{ once: true }}
               className="space-y-6"
             >
-              <Badge className="bg-green-100 text-green-700">Life Benefits</Badge>
+              <Badge className="bg-[#6e4d66]/10 text-[#453142]">Life Benefits</Badge>
               <h2 className="text-3xl md:text-5xl font-bold text-[#453142]">
                 Practical Benefits in Your Daily Life
               </h2>
@@ -253,7 +255,7 @@ export default function WhyUnderstandQuranPage() {
                   transition={{ delay: index * 0.05 }}
                   className="flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="h-6 w-6 text-[#6e4d66] flex-shrink-0 mt-0.5" />
                   <span className="text-[#453142] font-medium">{benefit}</span>
                 </motion.div>
               ))}
@@ -271,7 +273,7 @@ export default function WhyUnderstandQuranPage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <Badge className="mb-4 bg-red-100 text-red-700">Common Misconceptions</Badge>
+            <Badge className="mb-4 bg-[#453142]/10 text-[#453142]">Common Misconceptions</Badge>
             <h2 className="text-3xl md:text-5xl font-bold text-[#453142] mb-4">
               Breaking Down Barriers
             </h2>
@@ -292,17 +294,17 @@ export default function WhyUnderstandQuranPage() {
                 <Card className="h-full border-0 shadow-md">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="w-2 h-2 mt-2 rounded-full bg-red-500" />
+                      <div className="w-2 h-2 mt-2 rounded-full bg-[#6e4d66]" />
                       <div>
-                        <h3 className="text-lg font-semibold text-red-600 mb-2">
+                        <h3 className="text-lg font-semibold text-[#6e4d66] mb-2">
                           Myth: {item.myth}
                         </h3>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="w-2 h-2 mt-2 rounded-full bg-green-500" />
+                      <div className="w-2 h-2 mt-2 rounded-full bg-[#453142]" />
                       <div>
-                        <h3 className="text-lg font-semibold text-green-600 mb-2">
+                        <h3 className="text-lg font-semibold text-[#453142] mb-2">
                           Reality: {item.reality}
                         </h3>
                       </div>
@@ -316,7 +318,7 @@ export default function WhyUnderstandQuranPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-[#453142] to-purple-900 text-white">
+      <section className="py-16 md:py-24 bg-gradient-to-br from-[#453142] to-[#6e4d66] text-[#faf9f7]">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -324,18 +326,18 @@ export default function WhyUnderstandQuranPage() {
             viewport={{ once: true }}
             className="max-w-3xl mx-auto space-y-6"
           >
-            <BookOpen className="w-16 h-16 mx-auto text-white/80" />
+            <BookOpen className="w-16 h-16 mx-auto text-[#faf9f7]/80" />
             <h2 className="text-3xl md:text-5xl font-bold">
               Begin Your Transformation Today
             </h2>
-            <p className="text-xl text-white/80">
+            <p className="text-xl text-[#faf9f7]/80">
               Join thousands who have discovered the life-changing power of understanding Allah's words
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Button size="lg" className="bg-white text-[#453142] hover:bg-gray-100">
+              <Button size="lg" className="bg-white text-[#453142] hover:bg-[#faf9f7] transition-colors">
                 Enroll for Free
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button size="lg" variant="outline" className="border-[#453142] text-[#453142] hover:bg-[#453142]/10 transition-colors">
                 Learn Our Method
               </Button>
             </div>
