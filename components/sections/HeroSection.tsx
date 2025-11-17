@@ -17,7 +17,7 @@ const heroSlides = [
     description: "Understanding Quran becomes natural with our innovative teaching methodology",
     primaryCTA: "Watch Classes",
     secondaryCTA: "Learn More",
-    backgroundImage: "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=2000",
+    backgroundImage: "https://images.unsplash.com/photo-1618554844984-d4ed47c7e0c0?q=80&w=2069&auto=format&fit=crop",
   },
   {
     id: 2,
@@ -26,7 +26,7 @@ const heroSlides = [
     description: "Join thousands of students learning Quran translation in English, Urdu, and Tamil",
     primaryCTA: "Join for Free",
     secondaryCTA: "View Library",
-    backgroundImage: "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=2000",
+    backgroundImage: "https://images.unsplash.com/photo-1643860636409-1952e6e30145?q=80&w=1073&auto=format&fit=crop",
   },
   {
     id: 3,
@@ -35,9 +35,10 @@ const heroSlides = [
     description: "Experience life-changing impact through understanding Allah's message",
     primaryCTA: "Start Learning",
     secondaryCTA: "Contact Us",
-    backgroundImage: "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=2000",
+    backgroundImage: "https://images.unsplash.com/photo-1619616962999-b0dcf060c93f?q=80&w=1170&auto=format&fit=crop",
   },
 ];
+
 
 const floatingDots = [
   { top: "10%", left: "15%", delay: "0s", size: "w-2 h-2" },

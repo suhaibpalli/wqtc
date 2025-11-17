@@ -158,7 +158,7 @@ export default function Navbar() {
               </button>
               <div
                 className={`
-                  absolute left-0 top-full w-64 bg-[#57355e] rounded-lg mt-2 shadow-lg border border-[#e0def4]/20 z-50 py-2
+                  absolute left-0 top-full w-64 bg-[#faf9f7] rounded-lg mt-2 shadow-xl border border-[#453142]/20 z-50 py-2
                   transition-all duration-200
                   ${aboutDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
                 `}
@@ -168,7 +168,7 @@ export default function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="block px-5 py-3 text-base text-[#e0def4] font-medium hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors"
+                    className="block px-5 py-3 text-base text-[#453142] font-medium hover:bg-[#453142] hover:text-[#faf9f7] transition-colors rounded-md mx-1"
                     onClick={() => setAboutDropdownOpen(false)}
                   >
                     {item.label}
@@ -191,7 +191,7 @@ export default function Navbar() {
                     <ChevronDown className="h-5 w-5" />
                   </button>
                   <div
-                    className={`absolute left-0 top-full mt-2 w-64 bg-[#57355e] rounded-lg shadow-lg border border-[#e0def4]/20 py-2 transition-all duration-200 ${
+                    className={`absolute left-0 top-full mt-2 w-64 bg-[#faf9f7] rounded-lg shadow-xl border border-[#453142]/20 py-2 transition-all duration-200 ${
                       desktopOpenDropdown === link.label
                         ? "opacity-100 visible translate-y-0"
                         : "opacity-0 invisible -translate-y-2"
@@ -201,7 +201,7 @@ export default function Navbar() {
                       <Link
                         key={`${sublink.href}|${sublink.label}|${i}`}
                         href={sublink.href}
-                        className="block px-5 py-3 text-base text-[#e0def4] hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors"
+                        className="block px-5 py-3 text-base text-[#453142] font-medium hover:bg-[#453142] hover:text-[#faf9f7] transition-colors rounded-md mx-1"
                       >
                         {sublink.label}
                       </Link>
@@ -272,12 +272,12 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 space-y-3 border-t border-[#57355e] pt-4 bg-[#57355e] rounded-xl shadow-lg">
+          <div className="lg:hidden mt-4 pb-4 space-y-3 border-t border-[#453142]/20 pt-4 bg-[#faf9f7] rounded-xl shadow-lg">
             {/* Home link first in mobile */}
             <Link
               key="/"
               href="/"
-              className="block py-3 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-lg text-[#e0def4]"
+              className="block py-3 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-lg text-[#453142] font-medium"
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
@@ -289,11 +289,11 @@ export default function Navbar() {
                 onClick={() =>
                   setMobileOpenDropdown(mobileOpenDropdown === 'About Us' ? null : 'About Us')
                 }
-                className="w-full flex items-center justify-between py-3 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-left text-lg text-[#e0def4]"
+                className="w-full flex items-center justify-between py-3 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-left text-lg text-[#453142] font-medium"
               >
                 About Us
                 <ChevronDown
-                  className={`h-5 w-5 text-[#e0def4] transition-transform ${
+                  className={`h-5 w-5 transition-transform ${
                     mobileOpenDropdown === 'About Us' ? "rotate-180" : ""
                   }`}
                 />
@@ -304,7 +304,7 @@ export default function Navbar() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-2 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-base text-[#e0def4]"
+                      className="block py-2 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-base text-[#453142]"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {item.label}
@@ -321,11 +321,11 @@ export default function Navbar() {
                     onClick={() =>
                       setMobileOpenDropdown(mobileOpenDropdown === link.label ? null : link.label)
                     }
-                    className="w-full flex items-center justify-between py-3 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-left text-lg text-[#e0def4]"
+                    className="w-full flex items-center justify-between py-3 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-left text-lg text-[#453142] font-medium"
                   >
                     {link.label}
                     <ChevronDown
-                      className={`h-5 w-5 text-[#e0def4] transition-transform ${
+                      className={`h-5 w-5 transition-transform ${
                         mobileOpenDropdown === link.label ? "rotate-180" : ""
                       }`}
                     />
@@ -336,7 +336,7 @@ export default function Navbar() {
                         <Link
                           key={`${sublink.href}|${sublink.label}|${i}`}
                           href={sublink.href}
-                          className="block py-2 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-base text-[#e0def4]"
+                          className="block py-2 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-base text-[#453142]"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {sublink.label}
@@ -349,7 +349,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block py-3 px-4 rounded-md hover:bg-[#cdabff]/10 hover:text-[#cdabff] transition-colors text-lg text-[#e0def4]"
+                  className="block py-3 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-lg text-[#453142] font-medium"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}

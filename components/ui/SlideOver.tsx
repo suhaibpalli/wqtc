@@ -50,7 +50,8 @@ export default function SlideOver() {
                   <button
                     onClick={closeSlideOver}
                     aria-label="Close panel"
-                    className="absolute top-5 right-5 bg-red-600 text-white p-3 rounded-full shadow-lg focus:outline-none"
+                    className="absolute top-5 right-5 p-3 rounded-full shadow-lg focus:outline-none
+                               bg-[#faf9f7] text-[#453142] hover:bg-[#b187fc] hover:text-white transition-all border border-[#b187fc]/30"
                   >
                     <X className="w-4 h-4" />
                   </button>

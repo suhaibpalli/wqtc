@@ -17,7 +17,7 @@ export default function VideosPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [loading, setLoading] = useState(false);
-  
+
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const videosPerPage = 12;
@@ -96,6 +96,18 @@ export default function VideosPage() {
   const getYouTubeId = (url: string) => {
     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^&?/]+)/);
     return match ? match[1] : '';
+  };
+
+  // Try extract YouTube channel ID from url if available in the Video type
+  const getYouTubeChannelId = (video: Video) => {
+    // If video.youTube_channel_id exists use it, else fallback to environment or leave empty
+    // You may want to populate this on video objects from your backend for more reliability.
+    // Example fallback:
+    if ('youTube_channel_id' in video && video.youTube_channel_id) {
+      return video.youTube_channel_id;
+    }
+    // fallback channel id (you may put your own channel id here)
+    return process.env.NEXT_PUBLIC_YT_CHANNEL_ID || '';
   };
 
   return (
@@ -211,7 +223,9 @@ export default function VideosPage() {
         {/* Video Grid */}
         {!loading && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div
+              className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6"
+            >
               {currentVideos.map((video, index) => (
                 <motion.div
                   key={video.id}
@@ -221,7 +235,9 @@ export default function VideosPage() {
                   whileHover={{ y: -8 }}
                 >
                   <Card
-                    className="group cursor-pointer overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-white"
+                    className="group cursor-pointer overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-white flex flex-col h-full min-h-[380px]"
+                    // min-h to enforce card height as much as possible. 
+                    // Adjust min-h-[380px] as needed, or use a responsive value.
                     onClick={() => setSelectedVideo(video)}
                   >
                     {/* Thumbnail */}
@@ -240,14 +256,17 @@ export default function VideosPage() {
                     </div>
 
                     {/* Video Info */}
-                    <CardContent className="p-4">
-                      <h3 className="font-semibold text-[#453142] line-clamp-2 mb-2">
-                        {video.title}
-                      </h3>
-                      <p className="text-sm text-[#453142]/70">
-                        {video.surah_name || `Surah ${video.surah_no}`} - Verse {video.starting_ayah}
-                        {video.ending_ayah && ` to ${video.ending_ayah}`}
-                      </p>
+                    <CardContent className="flex flex-col flex-1 justify-between p-4">
+                      <div>
+                        <h3 className="font-semibold text-[#453142] line-clamp-2 mb-2 min-h-[3em]">
+                          {/* min-h-[3em] to enforce space for two lines always */}
+                          {video.title}
+                        </h3>
+                        <p className="text-sm text-[#453142]/70 min-h-[1.6em]">
+                          {video.surah_name || `Surah ${video.surah_no}`} - Verse {video.starting_ayah}
+                          {video.ending_ayah && ` to ${video.ending_ayah}`}
+                        </p>
+                      </div>
                       <p className="text-xs text-[#453142]/50 mt-2">
                         {new Date(video.created_date).toLocaleDateString()}
                       </p>
@@ -256,7 +275,6 @@ export default function VideosPage() {
                 </motion.div>
               ))}
             </div>
-
             {/* No Results */}
             {currentVideos.length === 0 && (
               <div className="text-center py-12">
@@ -323,7 +341,7 @@ export default function VideosPage() {
                   <div>
                     <h2 className="text-xl font-bold text-[#453142]">{selectedVideo.title}</h2>
                     <p className="text-sm text-[#453142]/70 mt-1">
-                      {selectedVideo.surah_name || `Surah ${selectedVideo.surah_no}`} - 
+                      {selectedVideo.surah_name || `Surah ${selectedVideo.surah_no}`} -
                       Verse {selectedVideo.starting_ayah}
                       {selectedVideo.ending_ayah && ` to ${selectedVideo.ending_ayah}`}
                     </p>
@@ -341,12 +359,18 @@ export default function VideosPage() {
                   <iframe
                     width="100%"
                     height="100%"
-                    src={`https://www.youtube.com/embed/${getYouTubeId(selectedVideo.youTube_link)}?autoplay=1`}
+                    src={`https://www.youtube.com/embed/${getYouTubeId(selectedVideo.youTube_link)}?autoplay=1&rel=0&modestbranding=1${getYouTubeChannelId(selectedVideo) ? `&origin=${typeof window !== 'undefined' ? window.location.origin : ''}&enablejsapi=1` : ''}${getYouTubeChannelId(selectedVideo) ? `&listType=user_uploads&list=${getYouTubeChannelId(selectedVideo)}` : ''}`}
                     title={selectedVideo.title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     className="w-full h-full"
                   ></iframe>
+                  {/* 
+                    Explanation:
+                    - '&rel=0' ensures that, after the video ends, only related videos from the same channel will show (YouTube's official documented behavior).
+                    - '&modestbranding=1' hides YouTube logo a bit.
+                    - The additional listType stuff is added if you provide a channel id to even further restrict, but `rel=0` is the main part for your ask.
+                  */}
                 </div>
 
                 {/* Video Details */}
