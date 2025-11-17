@@ -247,16 +247,15 @@ export default function Navbar() {
             </div>
             */}
 
-            {/* Opener Button */}
+            {/* Register Now Button */}
             <button
               onClick={() => openSlideOver(<SideSheetContent />)}
-              className="hidden md:inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#453142] text-[#faf9f7] shadow hover:bg-[#faf9f7] hover:text-[#453142] hover:scale-105 transition"
-              aria-label="Open about panel"
+              className="hidden md:inline-flex items-center justify-center h-10 px-5 rounded-full bg-[#453142] text-[#faf9f7] font-semibold shadow hover:bg-[#faf9f7] hover:text-[#453142] hover:scale-105 transition"
+              aria-label="Register now"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M12 4v16M4 12h16" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              Register Now
             </button>
+
 
             {/* Mobile Menu Button */}
             <Button
