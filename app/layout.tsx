@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AnnouncementBar from "@/components/layout/AnnouncementBar";
+import { SlideOverProvider } from "@/components/context/SlideOverContext";
+import SlideOver from "@/components/ui/SlideOver";
 
 const inter = Inter({ 
   subsets: ["latin"], 
@@ -124,10 +126,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* <AnnouncementBar /> */}
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
+          <SlideOverProvider>
+            {/* <AnnouncementBar /> */}
+            <Navbar />
+            {/* mount once, globally */}
+            <SlideOver />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
+          </SlideOverProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -5,6 +5,9 @@ import { useState } from "react"
 import { Menu, X, Facebook, Instagram, Youtube, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
+import { useSlideOver } from "@/components/context/SlideOverContext"
+import SideSheetContent from "@/components/layout/SideSheetContent"
+
 const aboutMenuItems = [
   { label: 'Our Mentor', href: '/about/our-mentor' },
   { label: 'Why Understand Quran', href: '/about/why-understand-quran' },
@@ -63,6 +66,8 @@ export default function Navbar() {
   const [desktopOpenDropdown, setDesktopOpenDropdown] = useState<string | null>(null)
   const [mobileOpenDropdown, setMobileOpenDropdown] = useState<string | null>(null)
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false)
+
+  const { openSlideOver } = useSlideOver();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-[#453142] backdrop-blur supports-[backdrop-filter]:bg-[#453142]">
@@ -216,9 +221,10 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Social Icons & Mobile Menu */}
+          {/* Social Icons, Opener Button & Mobile Menu */}
           <div className="flex items-center gap-4">
             {/* Social Icons */}
+            {/*
             <div className="hidden md:flex items-center gap-2">
               {socialLinks.map((social) => (
                 <Button
@@ -239,6 +245,18 @@ export default function Navbar() {
                 </Button>
               ))}
             </div>
+            */}
+
+            {/* Opener Button */}
+            <button
+              onClick={() => openSlideOver(<SideSheetContent />)}
+              className="hidden md:inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#453142] text-[#faf9f7] shadow hover:bg-[#faf9f7] hover:text-[#453142] hover:scale-105 transition"
+              aria-label="Open about panel"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 4v16M4 12h16" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
 
             {/* Mobile Menu Button */}
             <Button
@@ -341,6 +359,7 @@ export default function Navbar() {
             )}
 
             {/* Mobile Social Icons */}
+            {/*
             <div className="flex gap-3 pt-2">
               {socialLinks.map((social) => (
                 <Button
@@ -361,6 +380,7 @@ export default function Navbar() {
                 </Button>
               ))}
             </div>
+            */}
           </div>
         )}
       </nav>
