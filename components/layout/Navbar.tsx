@@ -14,6 +14,7 @@ const aboutMenuItems = [
   { label: 'Vision & Mission', href: '/about/vision-mission' },
 ]
 
+// NOTE: "Contact Us" has been moved out of navLinks; "Online Courses" is now handled separately in both desktop and mobile menus.
 const navLinks = [
   { href: "/", label: "Home" },
   {
@@ -30,16 +31,9 @@ const navLinks = [
       { href: "/library/audio", label: "Audio Library" },
       { href: "/library/ebooks", label: "EBooks" },
     ],
-  },
-  {
-    label: "Online Courses",
-    submenu: [
-      { href: "/online-courses", label: "Free Courses for Men" },
-      { href: "/online-courses", label: "Free Courses for Women" },
-      { href: "/online-courses", label: "Free Weekend Courses" },
-    ],
-  },
-  { href: "/contact", label: "Contact Us" },
+  }
+  // "Online Courses" is now handled as a dedicated dropdown below navLinks
+  // "Contact Us" will come after "Online Courses"
 ]
 
 const socialLinks = [
@@ -59,6 +53,14 @@ const socialLinks = [
     label: "YouTube",
   },
 ]
+
+// Filter options for online courses
+const onlineCourseFilters = [
+  { label: "All Courses", filter: "all" },
+  { label: "Men's Courses", filter: "men" },
+  { label: "Women's Courses", filter: "women" },
+  { label: "Weekend Courses", filter: "weekend" },
+];
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -177,48 +179,80 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Other navigation items (desktop) */}
-            {navLinks.filter((link) => link.label !== "Home").map((link) =>
-              link.submenu ? (
-                <div
-                  key={link.label}
-                  className="relative group"
-                  onMouseEnter={() => setDesktopOpenDropdown(link.label)}
-                  onMouseLeave={() => setDesktopOpenDropdown(null)}
-                >
-                  <button className="text-lg text-[#e0def4] hover:text-[#cdabff] transition-colors flex items-center gap-1">
-                    {link.label}
-                    <ChevronDown className="h-5 w-5" />
-                  </button>
+            {/* Resource Library and Translations nav items (Online Courses, Contact Us handled separately) */}
+            {navLinks
+              .filter((link) => link.label !== "Home")
+              .map((link) =>
+                link.submenu ? (
                   <div
-                    className={`absolute left-0 top-full mt-2 w-64 bg-[#faf9f7] rounded-lg shadow-xl border border-[#453142]/20 py-2 transition-all duration-200 ${
-                      desktopOpenDropdown === link.label
-                        ? "opacity-100 visible translate-y-0"
-                        : "opacity-0 invisible -translate-y-2"
-                    }`}
+                    key={link.label}
+                    className="relative group"
+                    onMouseEnter={() => setDesktopOpenDropdown(link.label)}
+                    onMouseLeave={() => setDesktopOpenDropdown(null)}
                   >
-                    {link.submenu.map((sublink, i) => (
-                      <Link
-                        key={`${sublink.href}|${sublink.label}|${i}`}
-                        href={sublink.href}
-                        className="block px-5 py-3 text-base text-[#453142] font-medium hover:bg-[#453142] hover:text-[#faf9f7] transition-colors rounded-md mx-1"
-                      >
-                        {sublink.label}
-                      </Link>
-                    ))}
+                    <button className="text-lg text-[#e0def4] hover:text-[#cdabff] transition-colors flex items-center gap-1">
+                      {link.label}
+                      <ChevronDown className="h-5 w-5" />
+                    </button>
+                    <div
+                      className={`absolute left-0 top-full mt-2 w-64 bg-[#faf9f7] rounded-lg shadow-xl border border-[#453142]/20 py-2 transition-all duration-200 ${
+                        desktopOpenDropdown === link.label
+                          ? "opacity-100 visible translate-y-0"
+                          : "opacity-0 invisible -translate-y-2"
+                      }`}
+                    >
+                      {link.submenu.map((sublink, i) => (
+                        <Link
+                          key={`${sublink.href}|${sublink.label}|${i}`}
+                          href={sublink.href}
+                          className="block px-5 py-3 text-base text-[#453142] font-medium hover:bg-[#453142] hover:text-[#faf9f7] transition-colors rounded-md mx-1"
+                        >
+                          {sublink.label}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-lg text-[#e0def4] hover:text-[#cdabff] transition-colors relative group"
-                >
-                  {link.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-1 bg-[#cdabff] group-hover:w-full transition-all duration-300"></span>
-                </Link>
-              )
-            )}
+                ) : null // skip non-submenu here, Contact Us handled below
+              )}
+
+            {/* Online Courses filter (Desktop) as dropdown for category filtering */}
+            <div
+              className="relative group"
+              onMouseEnter={() => setDesktopOpenDropdown("Online Courses")}
+              onMouseLeave={() => setDesktopOpenDropdown(null)}
+            >
+              <button className="text-lg text-[#e0def4] hover:text-[#cdabff] transition-colors flex items-center gap-1">
+                Online Courses
+                <ChevronDown className="h-5 w-5" />
+              </button>
+              <div
+                className={`absolute left-0 top-full mt-2 w-64 bg-[#faf9f7] rounded-lg shadow-xl border border-[#453142]/20 py-2 transition-all duration-200 ${
+                  desktopOpenDropdown === "Online Courses"
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2"
+                }`}
+              >
+                {onlineCourseFilters.map((filterLink) => (
+                  <Link
+                    key={filterLink.filter}
+                    href={`/online-courses?filter=${filterLink.filter}`}
+                    className="block px-5 py-3 text-base text-[#453142] font-medium hover:bg-[#453142] hover:text-[#faf9f7] transition-colors rounded-md mx-1"
+                  >
+                    {filterLink.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Contact Us always last */}
+            <Link
+              key="/contact"
+              href="/contact"
+              className="text-lg text-[#e0def4] hover:text-[#cdabff] transition-colors relative group"
+            >
+              Contact Us
+              <span className="absolute -bottom-1 left-0 w-0 h-1 bg-[#cdabff] group-hover:w-full transition-all duration-300"></span>
+            </Link>
           </div>
 
           {/* Social Icons, Opener Button & Mobile Menu */}
@@ -255,7 +289,6 @@ export default function Navbar() {
             >
               Register Now
             </button>
-
 
             {/* Mobile Menu Button */}
             <Button
@@ -313,49 +346,81 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-            {/* Other mobile nav items */}
-            {navLinks.filter((link) => link.label !== "Home").map((link) =>
-              link.submenu ? (
-                <div key={link.label} className="space-y-2">
-                  <button
-                    onClick={() =>
-                      setMobileOpenDropdown(mobileOpenDropdown === link.label ? null : link.label)
-                    }
-                    className="w-full flex items-center justify-between py-3 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-left text-lg text-[#453142] font-medium"
-                  >
-                    {link.label}
-                    <ChevronDown
-                      className={`h-5 w-5 transition-transform ${
-                        mobileOpenDropdown === link.label ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-                  {mobileOpenDropdown === link.label && (
-                    <div className="pl-4 space-y-1">
-                      {link.submenu.map((sublink, i) => (
-                        <Link
-                          key={`${sublink.href}|${sublink.label}|${i}`}
-                          href={sublink.href}
-                          className="block py-2 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-base text-[#453142]"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          {sublink.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+            {/* Resource Library and Translations (mobile accordions, skip Contact/Online Courses here) */}
+            {navLinks
+              .filter((link) => link.label !== "Home")
+              .map((link) =>
+                link.submenu ? (
+                  <div key={link.label} className="space-y-2">
+                    <button
+                      onClick={() =>
+                        setMobileOpenDropdown(mobileOpenDropdown === link.label ? null : link.label)
+                      }
+                      className="w-full flex items-center justify-between py-3 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-left text-lg text-[#453142] font-medium"
+                    >
+                      {link.label}
+                      <ChevronDown
+                        className={`h-5 w-5 transition-transform ${
+                          mobileOpenDropdown === link.label ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    {mobileOpenDropdown === link.label && (
+                      <div className="pl-4 space-y-1">
+                        {link.submenu.map((sublink, i) => (
+                          <Link
+                            key={`${sublink.href}|${sublink.label}|${i}`}
+                            href={sublink.href}
+                            className="block py-2 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-base text-[#453142]"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {sublink.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : null
+              )}
+
+            {/* Online Courses filter (Mobile) */}
+            <div className="space-y-2">
+              <button
+                onClick={() =>
+                  setMobileOpenDropdown(mobileOpenDropdown === "Online Courses" ? null : "Online Courses")
+                }
+                className="w-full flex items-center justify-between py-3 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-left text-lg text-[#453142] font-medium"
+              >
+                Online Courses
+                <ChevronDown
+                  className={`h-5 w-5 transition-transform ${mobileOpenDropdown === "Online Courses" ? "rotate-180" : ""}`}
+                />
+              </button>
+              {mobileOpenDropdown === "Online Courses" && (
+                <div className="pl-4 space-y-1">
+                  {onlineCourseFilters.map((filterLink) => (
+                    <Link
+                      key={filterLink.filter}
+                      href={`/online-courses?filter=${filterLink.filter}`}
+                      className="block py-2 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-base text-[#453142]"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {filterLink.label}
+                    </Link>
+                  ))}
                 </div>
-              ) : (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="block py-3 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-lg text-[#453142] font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              )
-            )}
+              )}
+            </div>
+
+            {/* Contact Us (always last in mobile menu) */}
+            <Link
+              key="/contact"
+              href="/contact"
+              className="block py-3 px-4 rounded-md hover:bg-[#453142] hover:text-[#faf9f7] transition-colors text-lg text-[#453142] font-medium"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact Us
+            </Link>
 
             {/* Mobile Social Icons */}
             {/*

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -462,13 +463,76 @@ function WeeklyCalendar({ classes, onClassClick }: { classes: ClassSchedule[], o
   );
 }
 
-export default function ClassesPage() {
+// Filter helpers for UI and logic
+type CourseFilter = 'all' | 'men' | 'women' | 'weekend';
+
+function getCourseCategory(c: ClassSchedule): CourseFilter {
+  // MEN: type Gents
+  if (c.type === 'Gents') return 'men';
+  // WOMEN: type Ladies
+  if (c.type === 'Ladies') return 'women';
+  // WEEKEND: has only Sat/Sun, OR has at least one Sat/Sun in c.days
+  // We'll call a class 'weekend' filter if it has any day Sat or Sun
+  if (c.days.some(d => d === 'Sat' || d === 'Sun')) return 'weekend';
+  // FAMILY/other: include in 'all'
+  return 'all';
+}
+
+function classMatchesFilter(c: ClassSchedule, filter: CourseFilter): boolean {
+  if (filter === 'all') return true;
+  if (filter === 'men') return getCourseCategory(c) === 'men';
+  if (filter === 'women') return getCourseCategory(c) === 'women';
+  if (filter === 'weekend') return getCourseCategory(c) === 'weekend';
+  return true;
+}
+
+const FILTER_OPTIONS: { filter: CourseFilter; label: string }[] = [
+  { filter: 'all', label: 'All Courses' },
+  { filter: 'men', label: "Men's Courses" },
+  { filter: 'women', label: "Women's Courses" },
+  { filter: 'weekend', label: 'Weekend Courses' }
+];
+
+export default function OnlineCoursesPage() {
   const [selectedClass, setSelectedClass] = useState<ClassSchedule | null>(null);
   const [formData, setFormData] = useState<Partial<ClassRegistration>>({
     country: 'India',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Filtering by category using URL search param '?filter='
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const urlFilterParam = searchParams?.get('filter');
+
+  const [filter, setFilter] = useState<CourseFilter>('all');
+
+  useEffect(() => {
+    if (
+      urlFilterParam === 'men' ||
+      urlFilterParam === 'women' ||
+      urlFilterParam === 'weekend'
+    ) {
+      setFilter(urlFilterParam);
+    } else {
+      setFilter('all');
+    }
+  }, [urlFilterParam]);
+
+  // When filter is changed via UI, update URL so nav remains correct.
+  const handleFilterChange = (val: CourseFilter) => {
+    // Updates URL while keeping client state in sync (won't reload).
+    const url = val === 'all' ? '/online-courses' : `/online-courses?filter=${val}`;
+    router.push(url);
+    // setFilter(val); // syncing will be handled by url param effect above
+  };
+
+  // Show only filtered classes for both grid & calendar
+  const filteredClasses = useMemo(
+    () => classes.filter(c => classMatchesFilter(c, filter)),
+    [filter]
+  );
 
   const handleClassSelect = (classItem: ClassSchedule) => {
     setSelectedClass(classItem);
@@ -520,14 +584,37 @@ export default function ClassesPage() {
       <div className="container mx-auto px-4">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <h1 className="text-4xl font-bold text-[#453142] text-center mt-10 mb-2 tracking-tight">Quran Translation Class Timetable</h1>
-          <p className="text-lg text-[#453142]/70 text-center mb-5">All batches • All genders • All locations</p>
-          {fajrTimeNote}
-          {/* Calendar */}
-          <WeeklyCalendar classes={classes} onClassClick={handleClassSelect} />
+          <p className="text-lg text-[#453142]/70 text-center mb-3">All batches • All genders • All locations</p>
 
-          {/* Card list summary */}
+          {/* FILTER NAV BUTTONS */}
+          <div className="flex justify-center gap-2 mb-5 mt-2">
+            {FILTER_OPTIONS.map(opt => (
+              <button
+                key={opt.filter}
+                className={`
+                  px-4 py-2 rounded-full font-semibold border-2 
+                  ${filter === opt.filter
+                    ? 'bg-[#453142] text-white border-[#453142]'
+                    : 'bg-white text-[#453142] border-[#b187fc]/30 hover:bg-[#e5e0e8]'}
+                  transition focus:outline-none focus:ring-2 focus:ring-[#b187fc] shadow
+                `}
+                onClick={() => handleFilterChange(opt.filter)}
+                aria-current={filter === opt.filter}
+                type="button"
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          {fajrTimeNote}
+
+          {/* Calendar (show only classes matching filter) */}
+          <WeeklyCalendar classes={filteredClasses} onClassClick={handleClassSelect} />
+
+          {/* Card list summary (show only filtered classes) */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7 mt-10">
-            {classes.map((classItem) => (
+            {filteredClasses.map((classItem) => (
               <Card
                 key={classItem.id}
                 className={`
@@ -567,6 +654,11 @@ export default function ClassesPage() {
               </Card>
             ))}
           </div>
+          {filteredClasses.length === 0 && (
+            <div className="text-center py-16 text-xl text-[#453142]/60 font-medium">
+              No courses available for this category.
+            </div>
+          )}
         </motion.div>
       </div>
 

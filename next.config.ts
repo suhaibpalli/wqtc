@@ -21,6 +21,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/vi/**",
       },
+      {
+        protocol: "https",
+        hostname: "media.istockphoto.com",
+        port: "",
+        pathname: "/id/482765777/photo/quran-in-the-mosque.jpg",
+      },
     ],
   },
   experimental: {
