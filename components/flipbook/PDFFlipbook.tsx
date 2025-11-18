@@ -44,8 +44,19 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [scale, setScale] = useState(3); // double the scale from 1.5 to 3
+  const [scale, setScale] = useState(5); // doubled from 2.5 to 5
   const [pdfjs, setPdfjs] = useState<any>(null);
+  const [viewportWidth, setViewportWidth] = useState<number>(0);
+
+  // Responsive detection for viewport width
+  useEffect(() => {
+    const updateWidth = () => setViewportWidth(window.innerWidth);
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
+  const isMobile = viewportWidth < 768;
 
   // Dynamically import pdfjs-dist on client
   useEffect(() => {
@@ -66,25 +77,21 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
       loadPDF();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filename, pdfjs, scale]); // include scale so changing zoom reloads pages
+  }, [filename, pdfjs, scale]);
 
   const loadPDF = async () => {
     if (!pdfjs) return;
     try {
       setLoading(true);
       const pdfUrl = `/pdfs/${filename}`;
-
       const loadingTask = pdfjs.getDocument(pdfUrl);
       const pdf = await loadingTask.promise;
-
       setTotalPages(pdf.numPages);
 
       const pagePromises: Promise<HTMLCanvasElement>[] = [];
-
       for (let i = 1; i <= pdf.numPages; i++) {
         pagePromises.push(renderPage(pdf, i, scale));
       }
-
       const renderedPages = await Promise.all(pagePromises);
       setPages(renderedPages);
       setLoading(false);
@@ -101,39 +108,19 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
   ): Promise<HTMLCanvasElement> => {
     const page = await pdf.getPage(pageNumber);
     const viewport = page.getViewport({ scale });
-
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-
     if (!context) {
       throw new Error('Could not get canvas context');
     }
-
     canvas.height = viewport.height;
     canvas.width = viewport.width;
-
     const renderContext = {
       canvasContext: context,
       viewport: viewport,
     };
-
     await page.render(renderContext).promise;
     return canvas;
-  };
-
-  // Group pages into spreads (arrays of [left, right])
-  const getSpreads = (pagesArr: HTMLCanvasElement[]) => {
-    const spreads: Array<[HTMLCanvasElement | null, HTMLCanvasElement | null]> = [];
-    // For cover mode: first page is alone (right side)
-    if (pagesArr.length === 0) return spreads;
-    spreads.push([null, pagesArr[0]]); // Cover: left empty, right is first
-    for (let i = 1; i < pagesArr.length; i += 2) {
-      spreads.push([
-        pagesArr[i] || null,
-        pagesArr[i + 1] || null,
-      ]);
-    }
-    return spreads;
   };
 
   const nextPage = () => {
@@ -152,19 +139,12 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
     setCurrentPage(e.data);
   };
 
-  // When zoom changes, re-render PDF
   const zoomIn = () => {
-    setScale((prev) => {
-      const newScale = Math.min(prev + 0.4, 6); // slightly larger increments
-      return newScale;
-    });
+    setScale((prev) => Math.min(prev + 0.5, 8)); // increased max from 5 to 8
   };
 
   const zoomOut = () => {
-    setScale((prev) => {
-      const newScale = Math.max(prev - 0.4, 1);
-      return newScale;
-    });
+    setScale((prev) => Math.max(prev - 0.5, 3)); // increased min from 1 to 3
   };
 
   if (!pdfjs || loading) {
@@ -180,37 +160,36 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
     );
   }
 
-  // DOUBLE the page width and height
-  // The original was width={550}, height={733} (single), now make width={1100}, height={1466} (for spread)
-  // If you want to let scale also affect the size, adjust here as needed.
+  // Responsive dimensions
+  const bookWidth = isMobile ? Math.min(450, viewportWidth * 0.95) : 1100; // doubled 550 -> 1100
+  const bookHeight = isMobile ? Math.min(700, window.innerHeight * 0.75) : 1466; // doubled 733 -> 1466
 
-  // For shadow effect and clarity max width/height also doubled
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#453142]/5">
+    <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#453142]/5 py-8">
       {/* Controls */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4 bg-white/95 rounded-full px-4 py-2 shadow-lg">
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 md:gap-4 bg-white/95 rounded-full px-3 md:px-4 py-2 shadow-lg">
         <Button
           onClick={prevPage}
           disabled={currentPage === 0}
           variant="ghost"
           size="sm"
-          className="rounded-full"
+          className="rounded-full h-8 w-8 p-0"
         >
-          <ChevronLeft className="h-5 w-5" />
+          <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" />
         </Button>
 
-        <span className="text-sm font-medium text-[#453142] min-w-[80px] text-center">
-          {currentPage + 1} / {getSpreads(pages).length}
+        <span className="text-xs md:text-sm font-medium text-[#453142] min-w-[60px] md:min-w-[80px] text-center">
+          {currentPage + 1} / {totalPages}
         </span>
 
         <Button
           onClick={nextPage}
-          disabled={currentPage >= getSpreads(pages).length - 1}
+          disabled={currentPage >= totalPages - 1}
           variant="ghost"
           size="sm"
-          className="rounded-full"
+          className="rounded-full h-8 w-8 p-0"
         >
-          <ChevronRight className="h-5 w-5" />
+          <ChevronRight className="h-4 w-4 md:h-5 md:w-5" />
         </Button>
 
         <div className="h-6 w-px bg-[#453142]/20" />
@@ -219,32 +198,32 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
           onClick={zoomOut}
           variant="ghost"
           size="sm"
-          className="rounded-full"
+          className="rounded-full h-8 w-8 p-0"
         >
-          <ZoomOut className="h-5 w-5" />
+          <ZoomOut className="h-4 w-4 md:h-5 md:w-5" />
         </Button>
 
         <Button
           onClick={zoomIn}
           variant="ghost"
           size="sm"
-          className="rounded-full"
+          className="rounded-full h-8 w-8 p-0"
         >
-          <ZoomIn className="h-5 w-5" />
+          <ZoomIn className="h-4 w-4 md:h-5 md:w-5" />
         </Button>
       </div>
 
       {/* Flipbook */}
-      <div className="flipbook-container">
+      <div className="flipbook-container overflow-auto">
         <HTMLFlipBook
           ref={flipbookRef}
-          width={1100}
-          height={1466}
+          width={bookWidth}
+          height={bookHeight}
           size="stretch"
-          minWidth={630}
-          maxWidth={2000}
-          minHeight={800}
-          maxHeight={3066}
+          minWidth={600}        // doubled from 300
+          maxWidth={2400}       // doubled from 1200
+          minHeight={800}       // doubled from 400
+          maxHeight={3200}      // doubled from 1600
           maxShadowOpacity={0.5}
           showCover={true}
           mobileScrollSupport={true}
@@ -253,8 +232,8 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
           style={{}}
           startPage={0}
           drawShadow={true}
-          flippingTime={1000}
-          usePortrait={false} // changed to horizontal spreads
+          flippingTime={800}
+          usePortrait={isMobile}
           startZIndex={0}
           autoSize={true}
           clickEventForward={true}
@@ -263,40 +242,10 @@ export default function PDFFlipbook({ filename }: PDFFlipbookProps) {
           showPageCorners={true}
           disableFlipByClick={false}
         >
-          {/* Map spreads: first is cover (single page right), then double pages per spread */}
-          {getSpreads(pages).map((spread, spreadIdx) => {
-            // Spread: [leftPageCanvas, rightPageCanvas]
-            return (
-              <div key={spreadIdx} className="flex w-full h-full">
-                {/* Left page */}
-                <div className="flex-1 flex">
-                  {spread[0] ? (
-                    <Page pageNumber={spreadIdx === 0 ? 1 : spreadIdx * 2} canvas={spread[0]} />
-                  ) : (
-                    // Empty for cover and last right page
-                    <div className="page bg-white shadow-lg flex-1" />
-                  )}
-                </div>
-                {/* Right page */}
-                <div className="flex-1 flex">
-                  {spread[1] ? (
-                    <Page
-                      pageNumber={
-                        spreadIdx === 0
-                          ? 1
-                          : spread[0]
-                            ? spreadIdx * 2 + 1
-                            : spreadIdx * 2
-                      }
-                      canvas={spread[1]}
-                    />
-                  ) : (
-                    <div className="page bg-white shadow-lg flex-1" />
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          {/* Each page is a direct child - NOT grouped into spreads */}
+          {pages.map((canvas, index) => (
+            <Page key={index} pageNumber={index + 1} canvas={canvas} />
+          ))}
         </HTMLFlipBook>
       </div>
     </div>
