@@ -16,10 +16,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Uncomment this if you're using prisma, generates prisma files for linting
-RUN npx prisma generate
-
-#Enables Hot Reloading Check https://github.com/vercel/next.js/issues/36774 for more information
+# Enables Hot Reloading Check https://github.com/vercel/next.js/issues/36774 for more information
 ENV CHOKIDAR_USEPOLLING=true
 ENV WATCHPACK_POLLING=true
 
@@ -31,9 +28,6 @@ COPY --from=deps /root/.npm /root/.npm
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
-
-# Uncomment this if you're using prisma, generates prisma files for linting
-RUN npx prisma generate
 
 RUN npm run build
 
@@ -70,4 +64,4 @@ ENV HOSTNAME "0.0.0.0"
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["npm", "run", "start:migrate:prod"]
+CMD npx prisma generate && npm run start:migrate:prod

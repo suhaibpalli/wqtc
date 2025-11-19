@@ -9,8 +9,8 @@
     "start:migrate:prod": "node server.js",
     "lint": "next lint",
     "docker:dev": "npm run dev",
-    "dev:migrate": "npx prisma migrate deploy && npm run dev",
-    "start:migrate": "npx prisma migrate deploy && npm start",
+    "dev:migrate": "npx prisma migrate deploy && npx prisma generate && npm run dev",
+    "start:migrate": "npx prisma migrate deploy && npx prisma generate && npm start",
     "docker:compose:dev": "docker-compose down && docker compose up -d --build",
     "docker:compose:prod": "docker-compose down && docker compose -f docker-compose.prod.yml up -d --build"
   },
