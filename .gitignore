@@ -1,48 +1,85 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# Dependencies
+
 /node_modules
 /.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+.pnp.js
+/.yarn
 
-# testing
+# Testing
+
 /coverage
 
-# next.js
+# Next.js
+
 /.next/
 /out/
+.next
+next-env.d.ts
 
-# production
+# Production
+
 /build
+.vercel
 
-# misc
-.DS_Store
-*.pem
+# Debug logs
 
-# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# Local env files
 
-# vercel
-.vercel
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# typescript
+# OS files
+
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+[Dd]esktop.ini
+
+# IDE
+
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-*
+
+# Prisma
+
+prisma/*.db
+prisma/*.db-journal
+prisma/dev.db*
+prisma/migrations_old/
+
+# User uploads - IMPORTANT!
+
+public/coverpages/*
+!public/coverpages/.gitkeep
+public/ebooks/*
+!public/ebooks/.gitkeep
+public/uploads/*
+!public/uploads/.gitkeep
+
+# TypeScript
+
 *.tsbuildinfo
-next-env.d.ts
-code_dumpy.py
-codebase_export.txt
-/lib/generated/prisma
 
-# Uploaded PDFs
-/public/pdfs/*
-!/public/pdfs/.gitkeep
+# Docker
+
+*.log
